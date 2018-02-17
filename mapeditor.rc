@@ -1,0 +1,791 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Russian resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
+#ifdef _WIN32
+LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
+#pragma code_page(1251)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDM_MENU1 MENU DISCARDABLE 
+BEGIN
+    POPUP "Файл"
+    BEGIN
+        MENUITEM "&Открыть карту",              1000
+        MENUITEM "&Сохранить карту",            1001
+        MENUITEM SEPARATOR
+        MENUITEM "&Очистить поле",              1002
+        MENUITEM SEPARATOR
+        MENUITEM "&Оцифровать сцену",           1003
+        MENUITEM SEPARATOR
+        MENUITEM "&Выйти",                      1004
+    END
+    POPUP "&Настройки"
+    BEGIN
+        MENUITEM "&Показывать направление линий", 1010
+        MENUITEM "&Показывать сегменты",        1011, CHECKED
+        MENUITEM "&Показывать сектора",         1012, CHECKED
+        MENUITEM "&Показывать источники света", 1013, CHECKED
+        MENUITEM SEPARATOR
+        MENUITEM "&Настроить генератор сцен",   1014
+    END
+END
+
+IDM_MENU2 MENU DISCARDABLE 
+BEGIN
+    POPUP "&Создать"
+    BEGIN
+        MENUITEM "&Создать сегмент",            2000
+        MENUITEM "&Создать линию раздела",      2001
+        POPUP "&Создать сектор"
+        BEGIN
+            MENUITEM "&Создать обычный сектор",     2200
+            MENUITEM "&Создать обычную дверь",      2201
+            MENUITEM "&Создать одноразовую дверь",  2202
+            MENUITEM "&Создать запертую дверь",     2203
+            MENUITEM "&Создать запирающуюся дверь", 2204
+            MENUITEM "&Создать обычную платформу",  2205
+            MENUITEM "&Создать неактивную платформу", 2206
+            MENUITEM "&Создать отключающуюся платформу", 2207
+            MENUITEM "&Создать обычный мостик",     2208
+            MENUITEM "&Создать обычный телепортатор", 2209
+        END
+        MENUITEM "&Источник света",             2003
+        MENUITEM SEPARATOR
+        MENUITEM "&Задать параметры стартовой позиции", 2004
+        MENUITEM SEPARATOR
+        POPUP "&Создать стандартную фигуру"
+        BEGIN
+            MENUITEM "&Создать правильный многоугольник", 2300
+            MENUITEM "&Создать звезду",             2301
+        END
+    END
+    POPUP "&Удалить"
+    BEGIN
+        MENUITEM "&Удалить сегмент",            2100
+        MENUITEM "&Удалить линию раздела",      2101
+        MENUITEM "&Удалить линии",              2102
+        MENUITEM "&Удалить сектор",             2103
+        MENUITEM "&Удалить источник света",     2104
+    END
+    POPUP "&Модифицировать"
+    BEGIN
+        MENUITEM "&Модифицировать сегмент",     2400
+        MENUITEM "&Модифицировать линию раздела", 2401
+        MENUITEM "&Модифицировать сектор",      2402
+        MENUITEM "&Модифицировать источник света", 2403
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG1 DIALOGEX 0, 0, 452, 224
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | DS_CONTEXTHELP | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION
+EXSTYLE WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP
+CAPTION "Панель выбора текстуры"
+FONT 8, "Fixedsys", 0, 0, 0x1
+BEGIN
+    SCROLLBAR       SELECTTEXTUREFORM_SCROLL_VERTICAL,324,4,8,192,SBS_VERT
+    SCROLLBAR       SELECTTEXTUREFORM_SCROLL_HORIZONTAL,4,196,320,8
+    PUSHBUTTON      "Выбрать",SELECTTEXTUREFORM_BUTTON_OK,196,208,128,12,
+                    BS_CENTER
+    PUSHBUTTON      "Отменить",SELECTTEXTUREFORM_BUTTON_CANCEL,4,208,128,12,
+                    BS_CENTER
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,336,4,112,216
+    LTEXT           "Верхнее смещение",-1,340,88,68,8,NOT WS_GROUP
+    EDITTEXT        SELECTTEXTUREFORM_EDIT_OFFSET_X,412,72,32,12,ES_NUMBER
+    LTEXT           "Левое смещение",-1,340,76,68,8,NOT WS_GROUP
+    EDITTEXT        SELECTTEXTUREFORM_EDIT_OFFSET_Y,412,84,32,12,ES_NUMBER
+    CONTROL         "Отразить слева на право",
+                    SELECTTEXTUREFORM_CHECKBOX_FLIP_V,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,340,100,104,12
+    CONTROL         "Отразить сверху вниз",SELECTTEXTUREFORM_CHECKBOX_FLIP_H,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,340,112,104,12
+    CONTROL         "Повернуть на 90",SELECTTEXTUREFORM_CHECKBOX_ROTATE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,340,124,104,12
+    PUSHBUTTON      "Просмотр текстуры",SELECTTEXTUREFORM_BUTTON_SHOWIMAGE,
+                    340,200,104,14,BS_CENTER
+    CTEXT           "Вся текстура по X это",-1,340,136,104,12,SS_NOPREFIX | 
+                    SS_SUNKEN | WS_BORDER | NOT WS_GROUP
+    CTEXT           "единиц по X",-1,384,148,60,12,SS_NOPREFIX | SS_SUNKEN | 
+                    WS_BORDER | NOT WS_GROUP
+    CTEXT           "Вся текстура по Y это",-1,340,164,104,12,SS_NOPREFIX | 
+                    SS_SUNKEN | WS_BORDER | NOT WS_GROUP
+    CTEXT           "единиц по Y(Z)",-1,384,176,60,12,SS_NOPREFIX | 
+                    SS_SUNKEN | WS_BORDER | NOT WS_GROUP
+    EDITTEXT        SELECTTEXTUREFORM_EDIT_SCALE_X,340,148,40,12,ES_NUMBER
+    EDITTEXT        SELECTTEXTUREFORM_EDIT_SCALE_Y,340,176,40,12,ES_NUMBER
+END
+
+IDD_DIALOG2 DIALOGEX 0, 0, 153, 171
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | DS_CONTEXTHELP | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION
+EXSTYLE WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP
+CAPTION "Создание линии раздела"
+FONT 8, "Fixedsys", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Изменить",CREATESEGMENTFORM_BUTTON_CHANGETEXTUREUP,4,84,
+                    64,12,BS_CENTER
+    PUSHBUTTON      "Изменить",CREATESEGMENTFORM_BUTTON_CHANGETEXTUREDOWN,84,
+                    84,64,12,BS_CENTER
+    LTEXT           "Верхняя текстура",-1,4,72,64,8,NOT WS_GROUP
+    LTEXT           "Нижняя текстура",-1,84,72,64,8,NOT WS_GROUP
+    PUSHBUTTON      "Создать линию",CREATESEGMENTFORM_BUTTON_CREATE,84,152,
+                    64,14,BS_CENTER
+    PUSHBUTTON      "Отменить",CREATESEGMENTFORM_BUTTON_CANCEL,4,152,64,14,
+                    BS_CENTER
+    CONTROL         "",-1,"Static",SS_ETCHEDHORZ,4,148,144,1
+    CONTROL         "",-1,"Static",SS_ETCHEDVERT,75,4,1,144
+    PUSHBUTTON      "Анимация",CREATESEGMENTFORM_BUTTON_ANIMATEUP,4,100,64,
+                    12,BS_CENTER
+    PUSHBUTTON      "Анимация",CREATESEGMENTFORM_BUTTON_ANIMATEDOWN,84,100,
+                    64,12,BS_CENTER
+    PUSHBUTTON      "Эмиссия",CREATESEGMENTFORM_BUTTON_EMISSIONUP,4,116,64,
+                    12,BS_CENTER
+    PUSHBUTTON      "Эмиссия",CREATESEGMENTFORM_BUTTON_EMISSIONDOWN,84,116,
+                    64,12,BS_CENTER
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,4,132,64,12
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,84,132,64,12
+END
+
+IDD_DIALOG3 DIALOGEX 0, 0, 153, 147
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | DS_CONTEXTHELP | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION
+EXSTYLE WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP
+CAPTION "Создание сегмента"
+FONT 8, "Fixedsys", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Изменить",CREATESEGMENTFORM_BUTTON_CHANGETEXTUREUP,4,84,
+                    64,12,BS_CENTER
+    CTEXT           "Текстура",-1,4,72,64,8,NOT WS_GROUP
+    PUSHBUTTON      "Создать сегмент",CREATESEGMENTFORM_BUTTON_CREATE,84,132,
+                    64,14,BS_CENTER
+    PUSHBUTTON      "Отменить",CREATESEGMENTFORM_BUTTON_CANCEL,80,4,68,14,
+                    BS_CENTER
+    CONTROL         "",-1,"Static",SS_ETCHEDVERT,75,4,1,140
+    PUSHBUTTON      "Анимация",CREATESEGMENTFORM_BUTTON_ANIMATEUP,4,100,64,
+                    12,BS_CENTER
+    PUSHBUTTON      "Эмиссия",CREATESEGMENTFORM_BUTTON_EMISSIONUP,4,116,64,
+                    12,BS_CENTER
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,4,132,64,12
+    LTEXT           "Сегмент видим только с правой стороны по направлению.",
+                    -1,78,25,66,51,NOT WS_GROUP
+    CONTROL         "Прозрачная",CREATESEGMENTFORM_CHECKBOX_BLEND,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,84,116,60,12
+END
+
+IDD_DIALOG4 DIALOGEX 0, 0, 153, 171
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | DS_CONTEXTHELP | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION
+EXSTYLE WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP
+CAPTION "Модификация линии раздела"
+FONT 8, "Fixedsys", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Изменить",CREATESEGMENTFORM_BUTTON_CHANGETEXTUREUP,4,84,
+                    64,12,BS_CENTER
+    PUSHBUTTON      "Изменить",CREATESEGMENTFORM_BUTTON_CHANGETEXTUREDOWN,84,
+                    84,64,12,BS_CENTER
+    LTEXT           "Верхняя текстура",-1,4,72,64,8,NOT WS_GROUP
+    LTEXT           "Нижняя текстура",-1,84,72,64,8,NOT WS_GROUP
+    PUSHBUTTON      "Применить",CREATESEGMENTFORM_BUTTON_CREATE,84,152,64,14,
+                    BS_CENTER
+    PUSHBUTTON      "Отменить",CREATESEGMENTFORM_BUTTON_CANCEL,4,152,64,14,
+                    BS_CENTER
+    CONTROL         "",-1,"Static",SS_ETCHEDHORZ,4,148,144,1
+    CONTROL         "",-1,"Static",SS_ETCHEDVERT,75,4,1,144
+    PUSHBUTTON      "Анимация",CREATESEGMENTFORM_BUTTON_ANIMATEUP,4,100,64,
+                    12,BS_CENTER
+    PUSHBUTTON      "Анимация",CREATESEGMENTFORM_BUTTON_ANIMATEDOWN,84,100,
+                    64,12,BS_CENTER
+    PUSHBUTTON      "Эмиссия",CREATESEGMENTFORM_BUTTON_EMISSIONUP,4,116,64,
+                    12,BS_CENTER
+    PUSHBUTTON      "Эмиссия",CREATESEGMENTFORM_BUTTON_EMISSIONDOWN,84,116,
+                    64,12,BS_CENTER
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,4,132,64,12
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,84,132,64,12
+END
+
+IDD_DIALOG5 DIALOGEX 0, 0, 153, 147
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | DS_CONTEXTHELP | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION
+EXSTYLE WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP
+CAPTION "Модификация сегмента"
+FONT 8, "Fixedsys", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Изменить",CREATESEGMENTFORM_BUTTON_CHANGETEXTUREUP,4,84,
+                    64,12,BS_CENTER
+    CTEXT           "Текстура",-1,4,72,64,8,NOT WS_GROUP
+    PUSHBUTTON      "Применить",CREATESEGMENTFORM_BUTTON_CREATE,84,132,64,14,
+                    BS_CENTER
+    PUSHBUTTON      "Отменить",CREATESEGMENTFORM_BUTTON_CANCEL,80,4,68,14,
+                    BS_CENTER
+    CONTROL         "",-1,"Static",SS_ETCHEDVERT,75,4,1,140
+    PUSHBUTTON      "Анимация",CREATESEGMENTFORM_BUTTON_ANIMATEUP,4,100,64,
+                    12,BS_CENTER
+    PUSHBUTTON      "Эмиссия",CREATESEGMENTFORM_BUTTON_EMISSIONUP,4,116,64,
+                    12,BS_CENTER
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,4,132,64,12
+    LTEXT           "Сегмент видим только с правой стороны по направлению",
+                    -1,78,25,66,51,NOT WS_GROUP
+    CONTROL         "Прозрачная",CREATESEGMENTFORM_CHECKBOX_BLEND,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,84,116,60,12
+END
+
+IDD_DIALOG6 DIALOGEX 0, 0, 178, 34
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | DS_CONTEXTHELP | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION
+EXSTYLE WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP
+CAPTION "Задание параметров стартовой позиции"
+FONT 8, "Fixedsys", 0, 0, 0x1
+BEGIN
+    LTEXT           "Угол поворота относительно оси OX",-1,4,5,136,8,NOT 
+                    WS_GROUP
+    EDITTEXT        STARTPOSFORM_EDIT_ANGLE,144,4,32,10,ES_NUMBER
+    PUSHBUTTON      "Принять",STARTPOSFORM_BUTTON_CREATE,124,16,52,14,
+                    BS_CENTER
+    PUSHBUTTON      "Отменить",STARTPOSFORM_BUTTON_CANCEL,4,16,50,14,
+                    BS_CENTER
+END
+
+IDD_DIALOG7 DIALOGEX 0, 0, 175, 79
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | DS_CONTEXTHELP | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION
+EXSTYLE WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP
+CAPTION "Создание правильного многоугольника"
+FONT 8, "Fixedsys", 0, 0, 0x1
+BEGIN
+    LTEXT           "Радиус многоугольника",-1,4,4,124,8,NOT WS_GROUP
+    LTEXT           "Число вершин многоугольника",-1,4,16,124,8,NOT WS_GROUP
+    LTEXT           "Угол поворота относительно OX",107,4,28,124,8,NOT 
+                    WS_GROUP
+    EDITTEXT        CREATEPOLYGONFORM_EDIT_RADIUS,128,4,42,10,ES_NUMBER
+    EDITTEXT        CREATEPOLYGONFORM_EDIT_VERTEX,128,16,42,10,ES_NUMBER
+    EDITTEXT        CREATEPOLYGONFORM_EDIT_ANGLE,128,28,42,10,ES_NUMBER
+    PUSHBUTTON      "Создать",CREATEPOLYGONFORM_BUTTON_CREATE,120,60,50,14,
+                    BS_CENTER
+    PUSHBUTTON      "Отменить",CREATEPOLYGONFORM_BUTTON_CANCEL,4,60,50,14,
+                    BS_CENTER
+    CONTROL         "",-1,"Static",SS_ETCHEDHORZ,4,56,168,1
+    CONTROL         "Видим с внутреней стороны",
+                    CREATEPOLYGONFORM_CHECKBOX_VECTOR,"Button",
+                    BS_AUTOCHECKBOX | BS_LEFTTEXT | BS_LEFT | WS_TABSTOP,4,
+                    40,164,12
+END
+
+IDD_DIALOG8 DIALOGEX 0, 0, 174, 90
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | DS_CONTEXTHELP | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION
+EXSTYLE WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP
+CAPTION "Создание звезды"
+FONT 8, "Fixedsys", 0, 0, 0x1
+BEGIN
+    LTEXT           "Первый радиус звезды",-1,4,4,84,8,NOT WS_GROUP
+    LTEXT           "Второй радиус звезды",-1,4,16,84,8,NOT WS_GROUP
+    LTEXT           "Число лучей звезды",-1,4,28,84,8,NOT WS_GROUP
+    LTEXT           "Угол поворота относительно OX",-1,4,40,120,8,NOT 
+                    WS_GROUP
+    EDITTEXT        CREATESTARFORM_EDIT_RADIUSUP,128,4,42,10,ES_NUMBER
+    EDITTEXT        CREATESTARFORM_EDIT_RADIUSDOWN,128,16,42,10,ES_NUMBER
+    EDITTEXT        CREATESTARFORM_EDIT_VERTEX,128,28,42,10,ES_NUMBER
+    EDITTEXT        CREATESTARFORM_EDIT_ANGLE,128,40,42,10,ES_NUMBER
+    CONTROL         "",-1,"Static",SS_ETCHEDHORZ,4,68,164,1
+    PUSHBUTTON      "Создать",CREATESTARFORM_BUTTON_CREATE,120,72,50,14,
+                    BS_CENTER
+    PUSHBUTTON      "Отменить",CREATESTARFORM_BUTTON_CANCEL,4,72,50,14,
+                    BS_CENTER
+    CONTROL         "Видима с внутренней стороны",
+                    CREATESTARFORM_CHECKBOX_VECTOR,"Button",BS_AUTOCHECKBOX | 
+                    BS_LEFTTEXT | WS_TABSTOP,4,52,164,12
+END
+
+IDD_DIALOG9 DIALOGEX 0, 0, 240, 148
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | DS_CONTEXTHELP | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION
+EXSTYLE WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP
+CAPTION "Настройка генератора сцен"
+FONT 8, "Fixedsys", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Параметры рендеринга",-1,4,0,232,64,WS_GROUP
+    LTEXT           "Линейное ослабление света",-1,12,36,120,8,NOT WS_GROUP
+    LTEXT           "Постоянное ослабление света",-1,12,24,120,8,NOT 
+                    WS_GROUP
+    LTEXT           "Квадратичное ослабление света",-1,12,48,120,8,NOT 
+                    WS_GROUP
+    LTEXT           "Размер блока разбиения",-1,12,12,120,8,NOT WS_GROUP
+    EDITTEXT        SETTINGRENDERFORM_EDIT_BLOCKSIZE,140,12,88,10,ES_NUMBER
+    EDITTEXT        SETTINGRENDERFORM_EDIT_CONSTANT,140,24,88,10
+    EDITTEXT        SETTINGRENDERFORM_EDIT_LINEAR,140,36,88,10
+    EDITTEXT        SETTINGRENDERFORM_EDIT_QUADRIC,140,48,88,10
+    LTEXT           "Глобальное фоновое освещение",-1,4,68,116,8,NOT 
+                    WS_GROUP
+    PUSHBUTTON      "Настроить",SETTINGRENDERFORM_BUTTON_SETCOLOR,32,80,88,
+                    20,BS_CENTER
+    CONTROL         "",-1,"Static",SS_ETCHEDVERT,124,64,1,64
+    CONTROL         "",-1,"Static",SS_ETCHEDHORZ,4,104,120,1
+    PUSHBUTTON      "Восстановить",SETTINGRENDERFORM_BUTTON_RESTORE,4,112,
+                    116,10,BS_CENTER
+    PUSHBUTTON      "Отменить",SETTINGRENDERFORM_BUTTON_CANCEL,4,132,116,10,
+                    BS_CENTER
+    PUSHBUTTON      "Применить",SETTINGRENDERFORM_BUTTON_CREATE,124,132,112,
+                    10,BS_CENTER
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,4,80,20,20
+    CTEXT           "Глобальный туман",-1,132,68,100,8,NOT WS_GROUP
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,128,80,20,20
+    PUSHBUTTON      "Настроить цвет",SETTINGRENDERFORM_BUTTON_SETFOGCOLOR,
+                    152,80,84,20,BS_CENTER
+    LTEXT           "Густота",-1,128,104,32,8,NOT WS_GROUP
+    EDITTEXT        SETTINGRENDERFORM_EDIT_FOGDENSITY,160,104,76,10,
+                    ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "Разрешить туман",SETTINGRENDERFORM_CHECKBOX_FOGENABLE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,128,116,108,12
+    CONTROL         "",111,"Static",SS_ETCHEDHORZ,124,128,112,1
+END
+
+IDD_DIALOG10 DIALOGEX 0, 0, 244, 260
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | DS_CONTEXTHELP | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION
+EXSTYLE WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP
+CAPTION "Создание источника света"
+FONT 8, "Fixedsys", 0, 0, 0x1
+BEGIN
+    LTEXT           "Уровень источника света",IDC_STATIC,4,4,92,8,NOT 
+                    WS_GROUP
+    PUSHBUTTON      "Создать",CREATELIGHTINGFORM_BUTTON_CREATE,92,28,50,14,
+                    BS_CENTER
+    PUSHBUTTON      "Отменить",CREATELIGHTINGFORM_BUTTON_CANCEL,4,28,50,14,
+                    BS_CENTER
+    PUSHBUTTON      "Настроить",CREATELIGHTINGFORM_BUTTON_SETCOLOR,180,20,56,
+                    20,BS_CENTER
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDFRAME,148,4,92,40
+    LTEXT           "Цвет источника",IDC_STATIC,164,8,60,8,NOT WS_GROUP
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDFRAME,152,20,20,20
+    GROUPBOX        "Спецэффекты",IDC_STATIC,5,50,235,205,BS_CENTER
+    LTEXT           "Время света (0-1)",IDC_STATIC,77,18,69,8
+    LTEXT           "Длительность тьмы",IDC_STATIC,100,95,69,8
+    LTEXT           "Минимальный уровень",IDC_STATIC,100,165,77,8
+    GROUPBOX        "Обычный источник",IDC_STATIC,10,60,225,25
+    LTEXT           "Длительность света",IDC_STATIC,100,110,73,8
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_MODE2_DARK_TIME,180,95,30,12
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_HEIGHT,100,3,45,12
+    LTEXT           "*Tи",IDC_STATIC,210,95,20,8
+    LTEXT           "*Tи",IDC_STATIC,210,110,20,8
+    GROUPBOX        "Случайное мигание",IDC_STATIC,10,85,225,55
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_MODE2_LIGHT_TIME,180,110,30,12
+    GROUPBOX        "Затухание",IDC_STATIC,10,140,225,40
+    LTEXT           "*Max",IDC_STATIC,210,165,20,8
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_MODE3_MINIMUM_LIGHT_LEVEL,180,
+                    165,30,12
+    LTEXT           "Один цикл за время",IDC_STATIC,100,150,73,8
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_MODE3_CYCLE_TIME,180,150,30,12
+    LTEXT           "*Tи",IDC_STATIC,210,150,20,8
+    GROUPBOX        "Мигание",IDC_STATIC,10,180,225,55
+    LTEXT           "Минимальный уровень",IDC_STATIC,100,220,77,8
+    LTEXT           "Время включения",IDC_STATIC,100,190,60,8
+    LTEXT           "Время выключения",IDC_STATIC,100,205,64,8
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_MODE4_ON_TIME,180,190,30,12
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_MODE4_OFF_TIME,180,205,30,12
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_MODE4_MINIMUM_LIGHT_LEVEL,180,
+                    220,30,12
+    LTEXT           "*Tи",IDC_STATIC,210,190,20,8
+    LTEXT           "*Tи",IDC_STATIC,210,205,20,8
+    LTEXT           "Время Ти",IDC_STATIC,85,240,35,8
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_TIME_INTERVAL,130,240,30,12
+    LTEXT           "условных циклов",IDC_STATIC,170,240,65,8
+    CONTROL         "Выбрать",CREATELIGHTINGFORM_RADIO_MODE1,"Button",
+                    BS_AUTORADIOBUTTON,15,70,44,10
+    CONTROL         "Выбрать",CREATELIGHTINGFORM_RADIO_MODE2,"Button",
+                    BS_AUTORADIOBUTTON,15,100,44,10
+    CONTROL         "Выбрать",CREATELIGHTINGFORM_RADIO_MODE3,"Button",
+                    BS_AUTORADIOBUTTON,15,155,44,10
+    CONTROL         "Выбрать",CREATELIGHTINGFORM_RADIO_MODE4,"Button",
+                    BS_AUTORADIOBUTTON,15,200,44,10
+    LTEXT           "Минимальный уровень",IDC_STATIC,100,125,77,8
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_MODE2_MINIMUM_LIGHT_LEVEL,180,
+                    125,30,12
+    LTEXT           "*Max",IDC_STATIC,210,125,20,8
+    LTEXT           "*Max",IDC_STATIC,210,220,20,8
+END
+
+IDD_DIALOG11 DIALOGEX 0, 0, 244, 260
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | DS_CONTEXTHELP | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION
+EXSTYLE WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP
+CAPTION "Модификация источника света"
+FONT 8, "Fixedsys"
+BEGIN
+    LTEXT           "Уровень источника света",IDC_STATIC,4,4,92,8,NOT 
+                    WS_GROUP
+    PUSHBUTTON      "Применить",CREATELIGHTINGFORM_BUTTON_CREATE,92,28,50,14,
+                    BS_CENTER
+    PUSHBUTTON      "Отменить",CREATELIGHTINGFORM_BUTTON_CANCEL,4,28,50,14,
+                    BS_CENTER
+    PUSHBUTTON      "Настроить",CREATELIGHTINGFORM_BUTTON_SETCOLOR,180,20,56,
+                    20,BS_CENTER
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDFRAME,148,4,92,40
+    LTEXT           "Цвет источника",IDC_STATIC,164,8,60,8,NOT WS_GROUP
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDFRAME,152,20,20,20
+    GROUPBOX        "Спецэффекты",IDC_STATIC,5,50,235,205,BS_CENTER
+    LTEXT           "Время света (0-1)",IDC_STATIC,77,18,69,8
+    LTEXT           "Длительность тьмы",IDC_STATIC,100,95,69,8
+    LTEXT           "Минимальный уровень",IDC_STATIC,100,165,77,8
+    GROUPBOX        "Обычный источник",IDC_STATIC,10,60,225,25
+    LTEXT           "Длительность света",IDC_STATIC,100,110,73,8
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_MODE2_DARK_TIME,180,95,30,12
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_HEIGHT,100,3,45,12
+    LTEXT           "*Tи",IDC_STATIC,210,95,20,8
+    LTEXT           "*Tи",IDC_STATIC,210,110,20,8
+    GROUPBOX        "Случайное мигание",IDC_STATIC,10,85,225,55
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_MODE2_LIGHT_TIME,180,110,30,12
+    GROUPBOX        "Затухание",IDC_STATIC,10,140,225,40
+    LTEXT           "*Max",IDC_STATIC,210,165,20,8
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_MODE3_MINIMUM_LIGHT_LEVEL,180,
+                    165,30,12
+    LTEXT           "Один цикл за время",IDC_STATIC,100,150,73,8
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_MODE3_CYCLE_TIME,180,150,30,12
+    LTEXT           "*Tи",IDC_STATIC,210,150,20,8
+    GROUPBOX        "Мигание",IDC_STATIC,10,180,225,55
+    LTEXT           "Минимальный уровень",IDC_STATIC,100,220,77,8
+    LTEXT           "Время включения",IDC_STATIC,100,190,60,8
+    LTEXT           "Время выключения",IDC_STATIC,100,205,64,8
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_MODE4_ON_TIME,180,190,30,12
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_MODE4_OFF_TIME,180,205,30,12
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_MODE4_MINIMUM_LIGHT_LEVEL,180,
+                    220,30,12
+    LTEXT           "*Tи",IDC_STATIC,210,190,20,8
+    LTEXT           "*Tи",IDC_STATIC,210,205,20,8
+    LTEXT           "Время Ти",IDC_STATIC,85,240,35,8
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_TIME_INTERVAL,130,240,30,12
+    LTEXT           "условных циклов",IDC_STATIC,170,240,65,8
+    CONTROL         "Выбрать",CREATELIGHTINGFORM_RADIO_MODE1,"Button",
+                    BS_AUTORADIOBUTTON,15,70,44,10
+    CONTROL         "Выбрать",CREATELIGHTINGFORM_RADIO_MODE2,"Button",
+                    BS_AUTORADIOBUTTON,15,100,44,10
+    CONTROL         "Выбрать",CREATELIGHTINGFORM_RADIO_MODE3,"Button",
+                    BS_AUTORADIOBUTTON,15,155,44,10
+    CONTROL         "Выбрать",CREATELIGHTINGFORM_RADIO_MODE4,"Button",
+                    BS_AUTORADIOBUTTON,15,200,44,10
+    LTEXT           "Минимальный уровень",IDC_STATIC,100,125,77,8
+    EDITTEXT        CREATELIGHTINGFORM_EDIT_MODE2_MINIMUM_LIGHT_LEVEL,180,
+                    125,30,12
+    LTEXT           "*Max",IDC_STATIC,210,125,20,8
+    LTEXT           "*Max",IDC_STATIC,210,220,20,8
+END
+
+IDD_DIALOG12 DIALOGEX 0, 0, 153, 192
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | DS_CONTEXTHELP | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION
+EXSTYLE WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP
+CAPTION "Изменение параметров создаваемых линий"
+FONT 8, "Fixedsys", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Изменить",CREATESEGMENTFORM_BUTTON_CHANGETEXTUREUP,4,84,
+                    64,12,BS_CENTER
+    PUSHBUTTON      "Изменить",CREATESEGMENTFORM_BUTTON_CHANGETEXTUREDOWN,84,
+                    84,64,12,BS_CENTER
+    LTEXT           "Верхняя текстура",-1,4,72,64,8,NOT WS_GROUP
+    LTEXT           "Нижняя текстура",-1,84,72,64,8,NOT WS_GROUP
+    PUSHBUTTON      "Применить",CREATESEGMENTFORM_BUTTON_CREATE,84,172,64,14,
+                    BS_CENTER
+    PUSHBUTTON      "Отменить",CREATESEGMENTFORM_BUTTON_CANCEL,4,172,64,14,
+                    BS_CENTER
+    CONTROL         "",-1,"Static",SS_ETCHEDHORZ,4,168,144,1
+    CONTROL         "",-1,"Static",SS_ETCHEDVERT,75,4,1,164
+    PUSHBUTTON      "Анимация",CREATESEGMENTFORM_BUTTON_ANIMATEUP,4,100,64,
+                    12,BS_CENTER
+    PUSHBUTTON      "Анимация",CREATESEGMENTFORM_BUTTON_ANIMATEDOWN,84,100,
+                    64,12,BS_CENTER
+    PUSHBUTTON      "Эмиссия",CREATESEGMENTFORM_BUTTON_EMISSIONUP,4,116,64,
+                    12,BS_CENTER
+    PUSHBUTTON      "Эмиссия",CREATESEGMENTFORM_BUTTON_EMISSIONDOWN,84,116,
+                    64,12,BS_CENTER
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,4,132,64,12
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,84,132,64,12
+    CONTROL         "Прозрачная",CREATESEGMENTFORM_CHECKBOX_BLEND,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,4,152,60,12
+END
+
+IDD_DIALOG13 DIALOGEX 0, 0, 272, 185
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | DS_CONTEXTHELP | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION
+EXSTYLE WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP
+CAPTION "Задание последовательности смены текстур"
+FONT 8, "Fixedsys", 0, 0, 0x1
+BEGIN
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,4,4,264,84
+    SCROLLBAR       SETTEXTUREFOLLOWFORM_SCROLLBAR_LIST,8,76,256,9
+    PUSHBUTTON      "Добавить текстуру",SETTEXTUREFOLLOWFORM_BUTTON_ADD,4,92,
+                    84,14,BS_CENTER
+    PUSHBUTTON      "Удалить текстуру",SETTEXTUREFOLLOWFORM_BUTTON_DELETE,94,
+                    92,84,14,BS_CENTER
+    PUSHBUTTON      "Повторить текстуру",SETTEXTUREFOLLOWFORM_BUTTON_REPEAT,
+                    184,92,84,14,BS_CENTER
+    PUSHBUTTON      "Очистить список текстур",
+                    SETTEXTUREFOLLOWFORM_BUTTON_CLEAR,4,108,174,14,BS_CENTER
+    PUSHBUTTON      "Отмена",SETTEXTUREFOLLOWFORM_BUTTON_CANCEL,184,108,84,
+                    14,BS_CENTER
+    PUSHBUTTON      "Применить",SETTEXTUREFOLLOWFORM_BUTTON_CREATE,184,124,
+                    84,14,BS_CENTER
+    CONTROL         "Повторять смену текстуры циклически",
+                    SETTEXTUREFOLLOWFORM_RADIOBUTTON_MODE1,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,4,124,174,12
+    CONTROL         "Инвертировать направление смены текстуры",
+                    SETTEXTUREFOLLOWFORM_RADIOBUTTON_MODE2,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,4,136,174,12
+    CONTROL         "Скроллинг слева направо",
+                    SETTEXTUREFOLLOWFORM_RADIOBUTTON_SLTOR,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,4,160,104,12
+    CONTROL         "Скроллинг сверху вниз",
+                    SETTEXTUREFOLLOWFORM_RADIOBUTTON_SUTOD,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,4,172,104,12
+    LTEXT           "Скорость",-1,112,161,36,8,NOT WS_GROUP
+    LTEXT           "Скорость",-1,112,173,36,8,NOT WS_GROUP
+    EDITTEXT        SETTEXTUREFOLLOWFORM_EDIT_SPEEDSLTOR,148,160,36,10,
+                    ES_NUMBER
+    EDITTEXT        SETTEXTUREFOLLOWFORM_EDIT_SPEEDSUTOD,148,172,36,10,
+                    ES_NUMBER
+    CONTROL         "Обратить",SETTEXTUREFOLLOWFORM_RADIOBUTTON_INVERTSLTOR,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,188,160,80,12
+    CONTROL         "Обратить",SETTEXTUREFOLLOWFORM_RADIOBUTTON_INVERTSUTOD,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,188,172,80,12
+    CONTROL         "Нет анимации",SETTEXTUREFOLLOWFORM_RADIOBUTTON_DISABLE,
+                    "Button",BS_AUTORADIOBUTTON | WS_TABSTOP,4,148,176,12
+END
+
+IDD_DIALOG14 DIALOGEX 65535, 0, 165, 205
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | DS_CONTEXTHELP | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION
+EXSTYLE WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP
+CAPTION "Просмотр текстуры"
+FONT 8, "Fixedsys", 0, 0, 0x1
+BEGIN
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,8,8,148,148
+    PUSHBUTTON      "Назад",SHOWTEXTUREFORM_BUTTON_EXIT,8,156,148,14,
+                    BS_CENTER
+    SCROLLBAR       SHOWTEXTUREFORM_SCROLL_HORIZONTAL,12,140,128,9
+    SCROLLBAR       SHOWTEXTUREFORM_SCROLL_VERTICAL,140,12,9,128,SBS_VERT
+    LTEXT           "Ширина",-1,8,172,52,12,SS_SUNKEN | WS_BORDER | NOT 
+                    WS_GROUP
+    LTEXT           "Высота",-1,8,184,52,12,SS_SUNKEN | WS_BORDER | NOT 
+                    WS_GROUP
+    LTEXT           "Text6",SHOWTEXTUREFORM_STATIC_WIDTH,60,172,96,12,
+                    SS_SUNKEN | WS_BORDER | NOT WS_GROUP
+    LTEXT           "Text7",SHOWTEXTUREFORM_STATIC_HEIGHT,60,184,96,12,
+                    SS_SUNKEN | WS_BORDER | NOT WS_GROUP
+END
+
+IDD_DIALOG15 DIALOGEX 0, 0, 278, 122
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | DS_CONTEXTHELP | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION
+EXSTYLE WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP
+CAPTION "Создание простого сектора"
+FONT 8, "Fixedsys", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Пол",-1,4,4,132,96,WS_GROUP
+    GROUPBOX        "Потолок",-1,140,4,132,96,WS_GROUP
+    PUSHBUTTON      "Изменить",
+                    CREATESIMPLYSECTORFORM_BUTTON_CHANGETEXTUREDOWN,76,12,56,
+                    12,BS_CENTER
+    PUSHBUTTON      "Изменить",CREATESIMPLYSECTORFORM_BUTTON_CHANGETEXTUREUP,
+                    212,12,56,12,BS_CENTER
+    LTEXT           "Уровень",-1,8,84,60,8,NOT WS_GROUP
+    LTEXT           "Уровень",-1,144,84,60,8,NOT WS_GROUP
+    EDITTEXT        CREATESIMPLYSECTORFORM_EDIT_DOWNLEVEL,76,84,56,10
+    EDITTEXT        CREATESIMPLYSECTORFORM_EDIT_UPLEVEL,212,84,56,10
+    PUSHBUTTON      "Создать",CREATESIMPLYSECTORFORM_BUTTON_CREATE,140,104,
+                    132,14,BS_CENTER
+    PUSHBUTTON      "Отменить",CREATESIMPLYSECTORFORM_BUTTON_CANCEL,4,104,
+                    132,14,BS_CENTER
+    PUSHBUTTON      "Анимация",CREATESIMPLYSECTORFORM_BUTTON_ANIMATEDOWN,76,
+                    28,56,12,BS_CENTER
+    PUSHBUTTON      "Анимация",CREATESIMPLYSECTORFORM_BUTTON_ANIMATEUP,212,
+                    28,56,12,BS_CENTER
+    PUSHBUTTON      "Эмиссия",CREATESIMPLYSECTORFORM_BUTTON_EMISSIONDOWN,76,
+                    44,56,12,BS_CENTER
+    PUSHBUTTON      "Эмиссия",CREATESIMPLYSECTORFORM_BUTTON_EMISSIONUP,212,
+                    44,56,12,BS_CENTER
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,76,60,56,20
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,212,60,56,20
+END
+
+IDD_DIALOG16 DIALOGEX 0, 0, 278, 122
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | DS_CONTEXTHELP | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION
+EXSTYLE WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP
+CAPTION "Модификация простого сектора"
+FONT 8, "Fixedsys", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Пол",-1,4,4,132,96,WS_GROUP
+    GROUPBOX        "Потолок",-1,140,4,132,96,WS_GROUP
+    PUSHBUTTON      "Изменить",
+                    CREATESIMPLYSECTORFORM_BUTTON_CHANGETEXTUREDOWN,76,12,56,
+                    12,BS_CENTER
+    PUSHBUTTON      "Изменить",CREATESIMPLYSECTORFORM_BUTTON_CHANGETEXTUREUP,
+                    212,12,56,12,BS_CENTER
+    LTEXT           "Уровень",-1,8,84,60,8,NOT WS_GROUP
+    LTEXT           "Уровень",-1,144,84,60,8,NOT WS_GROUP
+    EDITTEXT        CREATESIMPLYSECTORFORM_EDIT_DOWNLEVEL,76,84,56,10
+    EDITTEXT        CREATESIMPLYSECTORFORM_EDIT_UPLEVEL,212,84,56,10
+    PUSHBUTTON      "Применить",CREATESIMPLYSECTORFORM_BUTTON_CREATE,140,104,
+                    132,14,BS_CENTER
+    PUSHBUTTON      "Отменить",CREATESIMPLYSECTORFORM_BUTTON_CANCEL,4,104,
+                    132,14,BS_CENTER
+    PUSHBUTTON      "Анимация",CREATESIMPLYSECTORFORM_BUTTON_ANIMATEDOWN,76,
+                    28,56,12,BS_CENTER
+    PUSHBUTTON      "Анимация",CREATESIMPLYSECTORFORM_BUTTON_ANIMATEUP,212,
+                    28,56,12,BS_CENTER
+    PUSHBUTTON      "Эмиссия",CREATESIMPLYSECTORFORM_BUTTON_EMISSIONDOWN,76,
+                    44,56,12,BS_CENTER
+    PUSHBUTTON      "Эмиссия",CREATESIMPLYSECTORFORM_BUTTON_EMISSIONUP,212,
+                    44,56,12,BS_CENTER
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,76,60,56,20
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,212,60,56,20
+END
+
+IDD_DIALOG17 DIALOGEX 0, 0, 278, 122
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | DS_CONTEXTHELP | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION
+EXSTYLE WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP
+CAPTION "Создание простой двери"
+FONT 8, "Fixedsys", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Пол",-1,4,4,132,96,WS_GROUP
+    GROUPBOX        "Потолок",-1,140,4,132,96,WS_GROUP
+    PUSHBUTTON      "Изменить",CREATESIMPLYDOORFORM_BUTTON_CHANGETEXTUREDOWN,
+                    76,12,56,12,BS_CENTER
+    PUSHBUTTON      "Изменить",CREATESIMPLYDOORFORM_BUTTON_CHANGETEXTUREUP,
+                    212,12,56,12,BS_CENTER
+    LTEXT           "Уровень",-1,8,84,60,8,NOT WS_GROUP
+    LTEXT           "Уровень",-1,144,84,60,8,NOT WS_GROUP
+    EDITTEXT        CREATESIMPLYDOORFORM_EDIT_DOWNLEVEL,76,84,56,10
+    EDITTEXT        CREATESIMPLYDOORFORM_EDIT_UPLEVEL,212,84,56,10
+    PUSHBUTTON      "Создать",CREATESIMPLYDOORFORM_BUTTON_CREATE,140,104,132,
+                    14,BS_CENTER
+    PUSHBUTTON      "Отменить",CREATESIMPLYDOORFORM_BUTTON_CANCEL,4,104,132,
+                    14,BS_CENTER
+    PUSHBUTTON      "Анимация",CREATESIMPLYDOORFORM_BUTTON_ANIMATEDOWN,76,28,
+                    56,12,BS_CENTER
+    PUSHBUTTON      "Анимация",CREATESIMPLYDOORFORM_BUTTON_ANIMATEUP,212,28,
+                    56,12,BS_CENTER
+    PUSHBUTTON      "Эмиссия",CREATESIMPLYDOORFORM_BUTTON_EMISSIONDOWN,76,44,
+                    56,12,BS_CENTER
+    PUSHBUTTON      "Эмиссия",CREATESIMPLYDOORFORM_BUTTON_EMISSIONUP,212,44,
+                    56,12,BS_CENTER
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,76,60,56,20
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,212,60,56,20
+END
+
+IDD_DIALOG18 DIALOGEX 0, 0, 278, 122
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | DS_CONTEXTHELP | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION
+EXSTYLE WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP
+CAPTION "Модификация простой двери"
+FONT 8, "Fixedsys", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Пол",-1,4,4,132,96,WS_GROUP
+    GROUPBOX        "Потолок",-1,140,4,132,96,WS_GROUP
+    PUSHBUTTON      "Изменить",CREATESIMPLYDOORFORM_BUTTON_CHANGETEXTUREDOWN,
+                    76,12,56,12,BS_CENTER
+    PUSHBUTTON      "Изменить",CREATESIMPLYDOORFORM_BUTTON_CHANGETEXTUREUP,
+                    212,12,56,12,BS_CENTER
+    LTEXT           "Уровень",-1,8,84,60,8,NOT WS_GROUP
+    LTEXT           "Уровень",-1,144,84,60,8,NOT WS_GROUP
+    EDITTEXT        CREATESIMPLYDOORFORM_EDIT_DOWNLEVEL,76,84,56,10
+    EDITTEXT        CREATESIMPLYDOORFORM_EDIT_UPLEVEL,212,84,56,10
+    PUSHBUTTON      "Применить",CREATESIMPLYDOORFORM_BUTTON_CREATE,140,104,
+                    132,14,BS_CENTER
+    PUSHBUTTON      "Отменить",CREATESIMPLYDOORFORM_BUTTON_CANCEL,4,104,132,
+                    14,BS_CENTER
+    PUSHBUTTON      "Анимация",CREATESIMPLYDOORFORM_BUTTON_ANIMATEDOWN,76,28,
+                    56,12,BS_CENTER
+    PUSHBUTTON      "Анимация",CREATESIMPLYDOORFORM_BUTTON_ANIMATEUP,212,28,
+                    56,12,BS_CENTER
+    PUSHBUTTON      "Эмиссия",CREATESIMPLYDOORFORM_BUTTON_EMISSIONDOWN,76,44,
+                    56,12,BS_CENTER
+    PUSHBUTTON      "Эмиссия",CREATESIMPLYDOORFORM_BUTTON_EMISSIONUP,212,44,
+                    56,12,BS_CENTER
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,76,60,56,20
+    CONTROL         "",-1,"Static",SS_ETCHEDFRAME,212,60,56,20
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_DIALOG10, DIALOG
+    BEGIN
+        RIGHTMARGIN, 240
+        BOTTOMMARGIN, 218
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Russian resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

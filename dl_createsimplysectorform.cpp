@@ -1,15 +1,15 @@
 #include "dl_createsimplysectorform.h"
 
-extern SELECTTEXTUREFORM SelectTextureForm;
-extern SETTEXTUREFOLLOWFORM SetTextureFollowForm;
-extern MENUFORM MenuForm;
-extern SETUP SetUp;//настройки редактора
+extern CDialog_SelectTexture cDialog_SelectTexture;
+extern SETSTextureFollowCWnd_Form cDialog_SetTextureFollow;
+extern CWnd_Menu cWnd_Menu;
+extern SSettings sSettings;//настройки редактора
 
-CREATESIMPLYSECTORFORM CreateSimplySectorForm;
+CDialog_CreateSimplySector cDialog_CreateSimplySector;
 //------------------------------------------------------------------------------
-CREATESIMPLYSECTORFORM::CREATESIMPLYSECTORFORM(void)
+CDialog_CreateSimplySector::CDialog_CreateSimplySector(void)
 {
- CreateSimplySectorForm.Initialize();
+ cDialog_CreateSimplySector.Initialize();
 }
 LONG WINAPI CREATESIMPLYSECTORFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lParam)
 {
@@ -17,24 +17,24 @@ LONG WINAPI CREATESIMPLYSECTORFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPAR
  {
   case WM_INITDIALOG:
   {
-   CreateSimplySectorForm.InitDialog(hDlg,wParam,lParam);
+   cDialog_CreateSimplySector.InitDialog(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_PAINT:
   {
-   CreateSimplySectorForm.Paint(hDlg,wParam,lParam);
+   cDialog_CreateSimplySector.Paint(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_COMMAND:
   {
-   CreateSimplySectorForm.Command(hDlg,wParam,lParam);
+   cDialog_CreateSimplySector.Command(hDlg,wParam,lParam);
    return(TRUE);
   }
  }
  return(FALSE);
 }
 //------------------------------------------------------------------------------
-void CREATESIMPLYSECTORFORM::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void CDialog_CreateSimplySector::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  hDlg=hDlgs;
  hEdit_UpLevel=GetDlgItem(hDlg,CREATESIMPLYSECTORFORM_EDIT_UPLEVEL);
@@ -46,7 +46,7 @@ void CREATESIMPLYSECTORFORM::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  SetWindowText(hEdit_DownLevel,string);
  ColorSet.Create(CC_ANYCOLOR|CC_FULLOPEN,hDlg,hProjectInstance);
 }
-void CREATESIMPLYSECTORFORM::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void CDialog_CreateSimplySector::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  RECT Rect;
  BITMAPINFOHEADER bmih;
@@ -73,14 +73,14 @@ void CREATESIMPLYSECTORFORM::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  HDC hdc;
  hdc=BeginPaint(hDlg,&ps);
  unsigned char TextureMap[128*128*3];
- SelectTextureForm.CreateTextureImage(WorkingSector.DownTexture,TextureMap);
+ cDialog_SelectTexture.CreateTextureImage(WorkingSector.DownTexture,TextureMap);
  Rect.left=8;
  Rect.right=Rect.left+64;
  Rect.top=16;
  Rect.bottom=Rect.top+64;
  MapDialogRect(hDlg,&Rect);
  StretchDIBits(hdc,Rect.left,Rect.top,Rect.right-Rect.left,Rect.bottom-Rect.top,0,0,128,128,TextureMap,&info,DIB_RGB_COLORS,SRCCOPY);
- SelectTextureForm.CreateTextureImage(WorkingSector.UpTexture,TextureMap);
+ cDialog_SelectTexture.CreateTextureImage(WorkingSector.UpTexture,TextureMap);
  Rect.left=144;
  Rect.right=Rect.left+64;
  Rect.top=16;
@@ -120,28 +120,28 @@ void CREATESIMPLYSECTORFORM::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  DeleteObject(hPen);
  EndPaint(hDlg,&ps);
 }
-void CREATESIMPLYSECTORFORM::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void CDialog_CreateSimplySector::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  int id=LOWORD(wParam);
  if (id==CREATESIMPLYSECTORFORM_BUTTON_CHANGETEXTUREDOWN)
  {
-  WorkingSector.DownTexture=SelectTextureForm.Activate(hDlg,WorkingSector.DownTexture,0);
+  WorkingSector.DownTexture=cDialog_SelectTexture.Activate(hDlg,WorkingSector.DownTexture,0);
   InvalidateRect(hDlg,NULL,FALSE);
  }
  if (id==CREATESIMPLYSECTORFORM_BUTTON_CHANGETEXTUREUP)
  {
-  WorkingSector.UpTexture=SelectTextureForm.Activate(hDlg,WorkingSector.UpTexture,0);
+  WorkingSector.UpTexture=cDialog_SelectTexture.Activate(hDlg,WorkingSector.UpTexture,0);
   InvalidateRect(hDlg,NULL,FALSE);
  }
  if (id==CREATESIMPLYSECTORFORM_BUTTON_ANIMATEUP)
  {
   WorkingSector.UpTextureFollow.TextureList[0]=WorkingSector.UpTexture;
-  WorkingSector.UpTextureFollow=SetTextureFollowForm.Activate(hDlg,WorkingSector.UpTextureFollow);
+  WorkingSector.UpTextureFollow=cDialog_SetTextureFollow.Activate(hDlg,WorkingSector.UpTextureFollow);
  }
  if (id==CREATESIMPLYSECTORFORM_BUTTON_ANIMATEDOWN)
  {
   WorkingSector.DownTextureFollow.TextureList[0]=WorkingSector.DownTexture;
-  WorkingSector.DownTextureFollow=SetTextureFollowForm.Activate(hDlg,WorkingSector.DownTextureFollow);
+  WorkingSector.DownTextureFollow=cDialog_SetTextureFollow.Activate(hDlg,WorkingSector.DownTextureFollow);
  }
  if (id==CREATESIMPLYSECTORFORM_BUTTON_EMISSIONDOWN)
  {
@@ -167,9 +167,9 @@ void CREATESIMPLYSECTORFORM::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  }
  if (id==CREATESIMPLYSECTORFORM_BUTTON_CANCEL)
  {
-  KeyData.MaximumPset=0;
-  MenuForm.UpDate();
-  InvalidateRect(KeyData.hWndMain,NULL,FALSE);
+  sKeyData.MaximumPset=0;
+  cWnd_Menu.UpDate();
+  InvalidateRect(sKeyData.hWndMain,NULL,FALSE);
   EndDialog(hDlg,TRUE);
  }
  if (id==CREATESIMPLYSECTORFORM_BUTTON_CREATE)
@@ -184,22 +184,22 @@ void CREATESIMPLYSECTORFORM::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
   Sector[SelectSector]=WorkingSector;
   if (Flag==0)
   {
-   Sector[SelectSector].Vertex=KeyData.MaximumPset-1;
-   for(int n=0;n<KeyData.MaximumPset-1;n++)
+   Sector[SelectSector].Vertex=sKeyData.MaximumPset-1;
+   for(int n=0;n<sKeyData.MaximumPset-1;n++)
    {
-    Sector[SelectSector].X[n]=KeyData.X[n];
-    Sector[SelectSector].Y[n]=KeyData.Y[n];
+    Sector[SelectSector].X[n]=sKeyData.X[n];
+    Sector[SelectSector].Y[n]=sKeyData.Y[n];
    }
-   KeyData.MaximumNumberOfSimplySector++;
+   sKeyData.MaximumNumberOfSimplySector++;
   }
-  KeyData.MaximumPset=0;
-  MenuForm.UpDate();
-  InvalidateRect(KeyData.hWndMain,NULL,FALSE);
+  sKeyData.MaximumPset=0;
+  cWnd_Menu.UpDate();
+  InvalidateRect(sKeyData.hWndMain,NULL,FALSE);
   EndDialog(hDlg,TRUE);
  }
 }
 //------------------------------------------------------------------------------
-void CREATESIMPLYSECTORFORM::Initialize(void)
+void CDialog_CreateSimplySector::Initialize(void)
 {
  WorkingSector.UpLevel=0;
  WorkingSector.DownLevel=0;
@@ -210,47 +210,47 @@ void CREATESIMPLYSECTORFORM::Initialize(void)
  WorkingSector.DownEmissionG=0;
  WorkingSector.DownEmissionB=0;
  WorkingSector.Vertex=0;
- SelectTextureForm.InitializeTextureStruct(&WorkingSector.UpTexture);
- SelectTextureForm.InitializeTextureStruct(&WorkingSector.DownTexture);
- SetTextureFollowForm.InitializeTextureFollow(&WorkingSector.UpTextureFollow);
- SetTextureFollowForm.InitializeTextureFollow(&WorkingSector.DownTextureFollow);
+ cDialog_SelectTexture.InitializeTextureStruct(&WorkingSector.UpTexture);
+ cDialog_SelectTexture.InitializeTextureStruct(&WorkingSector.DownTexture);
+ cDialog_SetTextureFollow.InitializeTextureFollow(&WorkingSector.UpTextureFollow);
+ cDialog_SetTextureFollow.InitializeTextureFollow(&WorkingSector.DownTextureFollow);
 }
-void CREATESIMPLYSECTORFORM::CreateNewSector(void)
+void CDialog_CreateSimplySector::CreateNewSector(void)
 {
  Flag=0;
- SelectSector=KeyData.MaximumNumberOfSimplySector;
- EnableWindow(KeyData.hWndMenu,FALSE);
- DialogBox(hProjectInstance,(LPSTR)15,KeyData.hWndMain,(DLGPROC)CREATESIMPLYSECTORFORM_dlgProc);
- EnableWindow(KeyData.hWndMenu,TRUE);
+ SelectSector=sKeyData.MaximumNumberOfSimplySector;
+ EnableWindow(sKeyData.hWndMenu,FALSE);
+ DialogBox(hProjectInstance,(LPSTR)15,sKeyData.hWndMain,(DLGPROC)CREATESIMPLYSECTORFORM_dlgProc);
+ EnableWindow(sKeyData.hWndMenu,TRUE);
 }
-void CREATESIMPLYSECTORFORM::ModifycationSector(int sector)
+void CDialog_CreateSimplySector::ModifycationSector(int sector)
 {
  if (sector<0) return;
  SelectSector=sector;
  WorkingSector=Sector[sector];
  Flag=1;//флаг модификации включён
- EnableWindow(KeyData.hWndMenu,FALSE);
- DialogBox(hProjectInstance,(LPSTR)16,KeyData.hWndMain,(DLGPROC)CREATESIMPLYSECTORFORM_dlgProc);
- EnableWindow(KeyData.hWndMenu,TRUE);
+ EnableWindow(sKeyData.hWndMenu,FALSE);
+ DialogBox(hProjectInstance,(LPSTR)16,sKeyData.hWndMain,(DLGPROC)CREATESIMPLYSECTORFORM_dlgProc);
+ EnableWindow(sKeyData.hWndMenu,TRUE);
 }
-void CREATESIMPLYSECTORFORM::DeleteSector(void)
+void CDialog_CreateSimplySector::DeleteSector(void)
 {
- if (KeyData.SelectSector==-1) return;
- for(int n=KeyData.SelectSector+1;n<KeyData.MaximumNumberOfSimplySector;n++) Sector[n-1]=Sector[n];
- KeyData.SelectSector=-1;
- KeyData.SelectSectorType=-1;
- KeyData.MaximumNumberOfSimplySector--;
+ if (sKeyData.SelectSector==-1) return;
+ for(int n=sKeyData.SelectSector+1;n<sKeyData.MaximumNumberOfSimplySector;n++) Sector[n-1]=Sector[n];
+ sKeyData.SelectSector=-1;
+ sKeyData.SelectSectorType=-1;
+ sKeyData.MaximumNumberOfSimplySector--;
 }
-void CREATESIMPLYSECTORFORM::SaveSector(FILE *File)
+void CDialog_CreateSimplySector::SaveSector(FILE *File)
 {
  fprintf(File,"SIMPLY SECTOR STRUCTURE\n");
- fprintf(File,"MAXIMUM %i\n",KeyData.MaximumNumberOfSimplySector);
- for(int n=0;n<KeyData.MaximumNumberOfSimplySector;n++)
+ fprintf(File,"MAXIMUM %i\n",sKeyData.MaximumNumberOfSimplySector);
+ for(int n=0;n<sKeyData.MaximumNumberOfSimplySector;n++)
  {
   fprintf(File,"%i ",Sector[n].UpLevel);
   fprintf(File,"%i ",Sector[n].DownLevel);
-  SelectTextureForm.SaveTextureStruct(File,Sector[n].UpTexture);
-  SelectTextureForm.SaveTextureStruct(File,Sector[n].DownTexture);
+  cDialog_SelectTexture.SaveTextureStruct(File,Sector[n].UpTexture);
+  cDialog_SelectTexture.SaveTextureStruct(File,Sector[n].DownTexture);
   fprintf(File,"     %i \n",Sector[n].Vertex);
   for(int m=0;m<Sector[n].Vertex;m++)
   {
@@ -258,8 +258,8 @@ void CREATESIMPLYSECTORFORM::SaveSector(FILE *File)
    fprintf(File,"%i \n",Sector[n].Y[m]);
   }
   //сохраняем анимацию текстур
-  SetTextureFollowForm.Save(Sector[n].UpTextureFollow,File);
-  SetTextureFollowForm.Save(Sector[n].DownTextureFollow,File);
+  cDialog_SetTextureFollow.Save(Sector[n].UpTextureFollow,File);
+  cDialog_SetTextureFollow.Save(Sector[n].DownTextureFollow,File);
   //сохраняем эмиссию
   fprintf(File,"%i ",(int)Sector[n].UpEmissionR);
   fprintf(File,"%i ",(int)Sector[n].UpEmissionG);
@@ -271,11 +271,11 @@ void CREATESIMPLYSECTORFORM::SaveSector(FILE *File)
  //сохраняем текущие настройки
  fprintf(File,"%i ",WorkingSector.UpLevel);
  fprintf(File,"%i ",WorkingSector.DownLevel);
- SelectTextureForm.SaveTextureStruct(File,WorkingSector.UpTexture);
- SelectTextureForm.SaveTextureStruct(File,WorkingSector.DownTexture);
+ cDialog_SelectTexture.SaveTextureStruct(File,WorkingSector.UpTexture);
+ cDialog_SelectTexture.SaveTextureStruct(File,WorkingSector.DownTexture);
  //сохраняем анимацию текстур
- SetTextureFollowForm.Save(WorkingSector.UpTextureFollow,File);
- SetTextureFollowForm.Save(WorkingSector.DownTextureFollow,File);
+ cDialog_SetTextureFollow.Save(WorkingSector.UpTextureFollow,File);
+ cDialog_SetTextureFollow.Save(WorkingSector.DownTextureFollow,File);
  //сохраняем эмиссию
  fprintf(File,"%i ",(int)WorkingSector.UpEmissionR);
  fprintf(File,"%i ",(int)WorkingSector.UpEmissionG);
@@ -284,17 +284,17 @@ void CREATESIMPLYSECTORFORM::SaveSector(FILE *File)
  fprintf(File,"%i ",(int)WorkingSector.DownEmissionG);
  fprintf(File,"%i \n",(int)WorkingSector.DownEmissionB);
 }
-void CREATESIMPLYSECTORFORM::LoadSector(FILE *File)
+void CDialog_CreateSimplySector::LoadSector(FILE *File)
 {
  if (GetReadPos(File,"SIMPLY SECTOR STRUCTURE")==0) return;
  GetReadPos(File,"MAXIMUM");
- KeyData.MaximumNumberOfSimplySector=(int)ReadNumber(File);
- for(int n=0;n<KeyData.MaximumNumberOfSimplySector;n++)
+ sKeyData.MaximumNumberOfSimplySector=(int)ReadNumber(File);
+ for(int n=0;n<sKeyData.MaximumNumberOfSimplySector;n++)
  {
   Sector[n].UpLevel=(int)ReadNumber(File);
   Sector[n].DownLevel=(int)ReadNumber(File);
-  Sector[n].UpTexture=SelectTextureForm.LoadTextureStruct(File);
-  Sector[n].DownTexture=SelectTextureForm.LoadTextureStruct(File);
+  Sector[n].UpTexture=cDialog_SelectTexture.LoadTextureStruct(File);
+  Sector[n].DownTexture=cDialog_SelectTexture.LoadTextureStruct(File);
   Sector[n].Vertex=(int)ReadNumber(File);
   for(int m=0;m<Sector[n].Vertex;m++)
   {
@@ -302,8 +302,8 @@ void CREATESIMPLYSECTORFORM::LoadSector(FILE *File)
    Sector[n].Y[m]=(int)ReadNumber(File);
   }
   //загружаем анимацию текстур
-  SetTextureFollowForm.Load(&Sector[n].UpTextureFollow,File);
-  SetTextureFollowForm.Load(&Sector[n].DownTextureFollow,File);
+  cDialog_SetTextureFollow.Load(&Sector[n].UpTextureFollow,File);
+  cDialog_SetTextureFollow.Load(&Sector[n].DownTextureFollow,File);
   //загружаем эмиссию
   Sector[n].UpEmissionR=(unsigned char)ReadNumber(File);
   Sector[n].UpEmissionG=(unsigned char)ReadNumber(File);
@@ -314,11 +314,11 @@ void CREATESIMPLYSECTORFORM::LoadSector(FILE *File)
  }
  WorkingSector.UpLevel=(int)ReadNumber(File);
  WorkingSector.DownLevel=(int)ReadNumber(File);
- WorkingSector.UpTexture=SelectTextureForm.LoadTextureStruct(File);
- WorkingSector.DownTexture=SelectTextureForm.LoadTextureStruct(File);
+ WorkingSector.UpTexture=cDialog_SelectTexture.LoadTextureStruct(File);
+ WorkingSector.DownTexture=cDialog_SelectTexture.LoadTextureStruct(File);
  //загружаем анимацию текстур
- SetTextureFollowForm.Load(&WorkingSector.UpTextureFollow,File);
- SetTextureFollowForm.Load(&WorkingSector.DownTextureFollow,File);
+ cDialog_SetTextureFollow.Load(&WorkingSector.UpTextureFollow,File);
+ cDialog_SetTextureFollow.Load(&WorkingSector.DownTextureFollow,File);
  //загружаем эмиссию
  WorkingSector.UpEmissionR=(unsigned char)ReadNumber(File);
  WorkingSector.UpEmissionG=(unsigned char)ReadNumber(File);
@@ -327,10 +327,10 @@ void CREATESIMPLYSECTORFORM::LoadSector(FILE *File)
  WorkingSector.DownEmissionG=(unsigned char)ReadNumber(File);
  WorkingSector.DownEmissionB=(unsigned char)ReadNumber(File);
 }
-int CREATESIMPLYSECTORFORM::GetSectorInScreen(int x,int y)
+int CDialog_CreateSimplySector::GetSectorInScreen(int x,int y)
 {
  int sector=-1;
- for(int n=0;n<KeyData.MaximumNumberOfSimplySector;n++)
+ for(int n=0;n<sKeyData.MaximumNumberOfSimplySector;n++)
  {
   int pos=0;
   for(int m=0;m<Sector[n].Vertex;m++)
@@ -358,9 +358,9 @@ int CREATESIMPLYSECTORFORM::GetSectorInScreen(int x,int y)
  }
  return(sector);
 }
-int CREATESIMPLYSECTORFORM::GetSectorInMap(float x,float y,int number)
+int CDialog_CreateSimplySector::GetSectorInMap(float x,float y,int number)
 {
- for(int n=number;n<KeyData.MaximumNumberOfSimplySector;n++)
+ for(int n=number;n<sKeyData.MaximumNumberOfSimplySector;n++)
  {
   int pos=0;
   for(int m=0;m<Sector[n].Vertex;m++)
@@ -388,9 +388,9 @@ int CREATESIMPLYSECTORFORM::GetSectorInMap(float x,float y,int number)
  }
  return(-1);
 }
-void CREATESIMPLYSECTORFORM::DrawAllSector(int xLeftMap,int yTopMap)
+void CDialog_CreateSimplySector::DrawAllSector(int xLeftMap,int yTopMap)
 {
- for(int n=0;n<KeyData.MaximumNumberOfSimplySector;n++)
+ for(int n=0;n<sKeyData.MaximumNumberOfSimplySector;n++)
  {
   int minx=1000000,maxx=0,miny=1000000,maxy=0;
   for(int m=0;m<Sector[n].Vertex;m++)
@@ -399,7 +399,7 @@ void CREATESIMPLYSECTORFORM::DrawAllSector(int xLeftMap,int yTopMap)
    int i2=m+1;
    if (i2>=Sector[n].Vertex) i2-=Sector[n].Vertex;
    //если выбран простой сектор и это его порядковый номер
-   if (KeyData.SelectSector==n && KeyData.SelectSectorType==0 && (KeyData.PrimaryMode==7 || KeyData.PrimaryMode==10)) DrawLine((Sector[n].X[i1]-xLeftMap)*10,(Sector[n].Y[i1]-yTopMap)*10,(Sector[n].X[i2]-xLeftMap)*10,(Sector[n].Y[i2]-yTopMap)*10,255,255,64);
+   if (sKeyData.SelectSector==n && sKeyData.SelectSectorType==0 && (sKeyData.PrimaryMode==7 || sKeyData.PrimaryMode==10)) DrawLine((Sector[n].X[i1]-xLeftMap)*10,(Sector[n].Y[i1]-yTopMap)*10,(Sector[n].X[i2]-xLeftMap)*10,(Sector[n].Y[i2]-yTopMap)*10,255,255,64);
    else DrawLine((Sector[n].X[i1]-xLeftMap)*10,(Sector[n].Y[i1]-yTopMap)*10,(Sector[n].X[i2]-xLeftMap)*10,(Sector[n].Y[i2]-yTopMap)*10,255,0,255);
    if (Sector[n].Y[i1]>maxy) maxy=Sector[n].Y[i1];
    if (Sector[n].Y[i1]<miny) miny=Sector[n].Y[i1];
@@ -424,7 +424,7 @@ void CREATESIMPLYSECTORFORM::DrawAllSector(int xLeftMap,int yTopMap)
   if (maxx>500) maxx=500;
   if (maxy>500) maxy=500;
   int r=0,g=255,b=0;
-  if (KeyData.SelectSector==n && KeyData.SelectSectorType==0 && (KeyData.PrimaryMode==7 || KeyData.PrimaryMode==10))
+  if (sKeyData.SelectSector==n && sKeyData.SelectSectorType==0 && (sKeyData.PrimaryMode==7 || sKeyData.PrimaryMode==10))
   {
    r=255;
    g=0;
@@ -460,7 +460,7 @@ void CREATESIMPLYSECTORFORM::DrawAllSector(int xLeftMap,int yTopMap)
   }
  }
 }
-void CREATESIMPLYSECTORFORM::GenerateFloor(int n,SECTOR_PACKAGE *SCP)
+void CDialog_CreateSimplySector::GenerateFloor(int n,SSectorPackage *SCP)
 {
  //считаем направление нормали, чтобы узнать, как задавать направление обхода сектора
  double vx1=Sector[n].X[1]-Sector[n].X[0];
@@ -487,7 +487,7 @@ void CREATESIMPLYSECTORFORM::GenerateFloor(int n,SECTOR_PACKAGE *SCP)
  SCP->Location=2;
  SCP->Dz=0;
 }
-void CREATESIMPLYSECTORFORM::GenerateCeiling(int n,SECTOR_PACKAGE *SCP)
+void CDialog_CreateSimplySector::GenerateCeiling(int n,SSectorPackage *SCP)
 {
  //считаем направление нормали, чтобы узнать, как задавать направление обхода сектора
  double vx1=Sector[n].X[1]-Sector[n].X[0];
@@ -514,23 +514,23 @@ void CREATESIMPLYSECTORFORM::GenerateCeiling(int n,SECTOR_PACKAGE *SCP)
  SCP->Location=1;
  SCP->Dz=0;
 }
-int CREATESIMPLYSECTORFORM::GetUpLevelFromSegment(int n)
+int CDialog_CreateSimplySector::GetUpLevelFromSegment(int n)
 {
  return(Sector[n].UpLevel);
 }
-int CREATESIMPLYSECTORFORM::GetDownLevelFromSegment(int n)
+int CDialog_CreateSimplySector::GetDownLevelFromSegment(int n)
 {
  return(Sector[n].DownLevel);
 }
-int CREATESIMPLYSECTORFORM::GetUpLevelFromFrontier(int n)
+int CDialog_CreateSimplySector::GetUpLevelFromFrontier(int n)
 {
  return(Sector[n].UpLevel);
 }
-int CREATESIMPLYSECTORFORM::GetDownLevelFromFrontier(int n)
+int CDialog_CreateSimplySector::GetDownLevelFromFrontier(int n)
 {
  return(Sector[n].DownLevel);
 }
-int CREATESIMPLYSECTORFORM::GetPosition(int n,float X1,float Y1,float X2,float Y2)
+int CDialog_CreateSimplySector::GetPosition(int n,float X1,float Y1,float X2,float Y2)
 {
  int Left=0;
  int Right=0;
@@ -546,7 +546,7 @@ int CREATESIMPLYSECTORFORM::GetPosition(int n,float X1,float Y1,float X2,float Y
  if (Left>Right) return(1);
  return(0);
 }
-void CREATESIMPLYSECTORFORM::SaveSectorFromRender(FILE *File,int sector)
+void CDialog_CreateSimplySector::SaveSectorFromRender(FILE *File,int sector)
 {
  SaveInt(File,Sector[sector].UpLevel);
  SaveInt(File,Sector[sector].DownLevel);
@@ -559,7 +559,7 @@ void CREATESIMPLYSECTORFORM::SaveSectorFromRender(FILE *File,int sector)
   SaveFloat(File,(float)(Sector[sector].Y[m]*16.0));
  }
  //сохраняем анимацию текстур
- SetTextureFollowForm.SaveForRender(Sector[sector].UpTextureFollow,File);
- SetTextureFollowForm.SaveForRender(Sector[sector].DownTextureFollow,File);
+ cDialog_SetTextureFollow.SaveForRender(Sector[sector].UpTextureFollow,File);
+ cDialog_SetTextureFollow.SaveForRender(Sector[sector].DownTextureFollow,File);
 }
  

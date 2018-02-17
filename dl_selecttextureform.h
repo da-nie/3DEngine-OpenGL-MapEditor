@@ -11,7 +11,7 @@
 #include "dl_showtextureform.h"
 
 //------------------------------------------------------------------------------
-struct TEXTURE
+struct STexture
 {
  int TextureNo;//номер текстуры
  int FlipVertical;//1-отразить вертикально
@@ -26,7 +26,7 @@ struct TEXTURE
 LONG WINAPI SELECTTEXTUREFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lParam);
 
 //------------------------------------------------------------------------------
-class SELECTTEXTUREFORM
+class CDialog_SelectTexture
 {
  public:
   //-----------------------------------------------------------
@@ -44,8 +44,8 @@ class SELECTTEXTUREFORM
   HWND hCheckBox_Flip_H;
   HWND hCheckBox_Rotate;
   //-----------------------------------------------------------
-  TEXTURE OldTexture;//старая текстура
-  TEXTURE WorkingTexture;//рабочая текстура
+  STexture OldTexture;//старая текстура
+  STexture WorkingTexture;//рабочая текстура
   int Mode;//0-нормальный режим,1-блокировать дополнительные настройки текстуры
   int hPos;//горизонтальная позиция бегунка
   int vPos;//вертикальная позиция безунка
@@ -59,15 +59,15 @@ class SELECTTEXTUREFORM
   void VScroll(HWND hDlgs,WPARAM wParam,LPARAM lParam);
   void LButtonUp(HWND hDlgs,WPARAM wParam,LPARAM lParam);
   //-----------------------------------------------------------
-  void SaveTextureStruct(FILE *File,TEXTURE Texture);//сохраняет структуру текстуры
-  TEXTURE LoadTextureStruct(FILE *File);//загружает структуру текстуры
-  int CompareTextureStruct(TEXTURE Texture1,TEXTURE Texture2);//сравнивает две структуры текстуры
-  void CreateTextureImage(TEXTURE Texture,unsigned char *Image);//создаёт образ текстуры по её параметрам
-  void CreateTextureCoord(TEXTURE Texture,double *TX,double *TY);
-  void InitializeTextureStruct(TEXTURE *Texture);
-  void CopyTextureStruct(TEXTURE *T1,TEXTURE T2);
+  void SaveTextureStruct(FILE *File,STexture Texture);//сохраняет структуру текстуры
+  STexture LoadTextureStruct(FILE *File);//загружает структуру текстуры
+  int CompareTextureStruct(STexture Texture1,STexture Texture2);//сравнивает две структуры текстуры
+  void CreateTextureImage(STexture Texture,unsigned char *Image);//создаёт образ текстуры по её параметрам
+  void CreateTextureCoord(STexture Texture,double *TX,double *TY);
+  void InitializeTextureStruct(STexture *Texture);
+  void CopyTextureStruct(STexture *T1,STexture T2);
   //-----------------------------------------------------------
-  TEXTURE Activate(HWND hWnd,TEXTURE Texture,int mode);//возвращает структуру для выбранной текстуры
+  STexture Activate(HWND hWnd,STexture Texture,int mode);//возвращает структуру для выбранной текстуры
   //-----------------------------------------------------------
 };
 

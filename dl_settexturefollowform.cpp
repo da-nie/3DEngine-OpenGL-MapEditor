@@ -1,8 +1,8 @@
 #include "dl_settexturefollowform.h"
 
-extern SELECTTEXTUREFORM SelectTextureForm;
+extern CDialog_SelectTexture cDialog_SelectTexture;
 
-SETTEXTUREFOLLOWFORM SetTextureFollowForm;
+SETSTextureFollowCWnd_Form cDialog_SetTextureFollow;
 //------------------------------------------------------------------------------
 LONG WINAPI SETTEXTUREFOLLOWFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lParam)
 {
@@ -10,29 +10,29 @@ LONG WINAPI SETTEXTUREFOLLOWFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM
  {
   case WM_INITDIALOG:
   {
-   SetTextureFollowForm.InitDialog(hDlg,wParam,lParam);
+   cDialog_SetTextureFollow.InitDialog(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_COMMAND:
   {
-   SetTextureFollowForm.Command(hDlg,wParam,lParam);
+   cDialog_SetTextureFollow.Command(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_HSCROLL:
   {
-   SetTextureFollowForm.HScroll(hDlg,wParam,lParam);
+   cDialog_SetTextureFollow.HScroll(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_PAINT:
   {
-   SetTextureFollowForm.Paint(hDlg,wParam,lParam);
+   cDialog_SetTextureFollow.Paint(hDlg,wParam,lParam);
    return(TRUE);
   }
  }
  return(FALSE);
 }
 //------------------------------------------------------------------------------
-void SETTEXTUREFOLLOWFORM::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void SETSTextureFollowCWnd_Form::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  hDlg=hDlgs;
  hRadioButton_Mode1=GetDlgItem(hDlg,SETTEXTUREFOLLOWFORM_RADIOBUTTON_MODE1);
@@ -89,13 +89,13 @@ void SETTEXTUREFOLLOWFORM::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  if (hPos<0) hPos=0;
  SetScrollPos(hScrollBar_List,SB_CTL,hPos,TRUE);
 }
-void SETTEXTUREFOLLOWFORM::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void SETSTextureFollowCWnd_Form::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  int id=LOWORD(wParam);
  if (id==SETTEXTUREFOLLOWFORM_BUTTON_CANCEL)
  {
   TextureFollow=OldTextureFollow;
-  InvalidateRect(KeyData.hWndMain,NULL,FALSE);
+  InvalidateRect(sKeyData.hWndMain,NULL,FALSE);
   EndDialog(hDlg,TRUE);
  }
  if (id==SETTEXTUREFOLLOWFORM_BUTTON_CREATE)
@@ -115,7 +115,7 @@ void SETTEXTUREFOLLOWFORM::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
   TextureFollow.SpeedLToR=atoi(string);
   GetWindowText(hEdit_SpeedSUToD,string,255);
   TextureFollow.SpeedUToD=atoi(string);
-  InvalidateRect(KeyData.hWndMain,NULL,FALSE);
+  InvalidateRect(sKeyData.hWndMain,NULL,FALSE);
   EndDialog(hDlg,TRUE);
  }
  if (id==SETTEXTUREFOLLOWFORM_BUTTON_CLEAR)
@@ -139,8 +139,8 @@ void SETTEXTUREFOLLOWFORM::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  if (id==SETTEXTUREFOLLOWFORM_BUTTON_ADD)
  {
   if (TextureFollow.MaximumTexture>=100) return;
-  TEXTURE texture=SelectTextureForm.Activate(hDlg,TextureFollow.TextureList[TextureFollow.MaximumTexture-1],1);
-  if (SelectTextureForm.CompareTextureStruct(texture,TextureFollow.TextureList[TextureFollow.MaximumTexture-1])==1) return;
+  STexture texture=cDialog_SelectTexture.Activate(hDlg,TextureFollow.TextureList[TextureFollow.MaximumTexture-1],1);
+  if (cDialog_SelectTexture.CompareTextureStruct(texture,TextureFollow.TextureList[TextureFollow.MaximumTexture-1])==1) return;
   TextureFollow.TextureList[TextureFollow.MaximumTexture]=texture;
   TextureFollow.MaximumTexture++;
   SetScrollRange(hScrollBar_List,SB_CTL,0,TextureFollow.MaximumTexture-1,TRUE);
@@ -195,7 +195,7 @@ void SETTEXTUREFOLLOWFORM::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
   }
  }
 }
-void SETTEXTUREFOLLOWFORM::HScroll(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void SETSTextureFollowCWnd_Form::HScroll(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  int move=0;
  int msg=LOWORD(wParam);
@@ -232,7 +232,7 @@ void SETTEXTUREFOLLOWFORM::HScroll(HWND hDlgs,WPARAM wParam,LPARAM lParam)
   InvalidateRect(hDlg,NULL,FALSE);
  }
 }
-void SETTEXTUREFOLLOWFORM::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void SETSTextureFollowCWnd_Form::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  RECT Rect;
  BITMAPINFOHEADER bmih;
@@ -261,9 +261,9 @@ void SETTEXTUREFOLLOWFORM::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  for(int x=0;x<4;x++)
  {
   unsigned char TextureMap[128*128*3];
-  TEXTURE number;
+  STexture number;
   if (hPos+x<TextureFollow.MaximumTexture) number=TextureFollow.TextureList[hPos+x];
-  if (hPos+x<TextureFollow.MaximumTexture) SelectTextureForm.CreateTextureImage(number,TextureMap);
+  if (hPos+x<TextureFollow.MaximumTexture) cDialog_SelectTexture.CreateTextureImage(number,TextureMap);
   else
   {
    for(int tx=0;tx<128;tx++)
@@ -287,7 +287,7 @@ void SETTEXTUREFOLLOWFORM::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  EndPaint(hDlg,&ps);
 }
 //------------------------------------------------------------------------------
-void SETTEXTUREFOLLOWFORM::SaveForRender(TEXTUREFOLLOW texturefollow,FILE *File)
+void SETSTextureFollowCWnd_Form::SaveForRender(STextureFollow texturefollow,FILE *File)
 {
  SaveInt(File,texturefollow.Mode);
  SaveInt(File,texturefollow.MaximumTexture);
@@ -298,29 +298,29 @@ void SETTEXTUREFOLLOWFORM::SaveForRender(TEXTUREFOLLOW texturefollow,FILE *File)
  SaveInt(File,texturefollow.ScrollUToD);
  SaveInt(File,texturefollow.SpeedUToD);
 }
-void SETTEXTUREFOLLOWFORM::Save(TEXTUREFOLLOW texturefollow,FILE *File)
+void SETSTextureFollowCWnd_Form::Save(STextureFollow texturefollow,FILE *File)
 {
  fprintf(File,"%i ",texturefollow.Mode);
  fprintf(File,"%i \n",texturefollow.MaximumTexture);
  for(int m=0;m<texturefollow.MaximumTexture;m++)
- SelectTextureForm.SaveTextureStruct(File,texturefollow.TextureList[m]);
+ cDialog_SelectTexture.SaveTextureStruct(File,texturefollow.TextureList[m]);
  fprintf(File,"\n%i ",texturefollow.ScrollLToR);
  fprintf(File,"%i ",texturefollow.SpeedLToR);
  fprintf(File,"%i ",texturefollow.ScrollUToD);
  fprintf(File,"%i \n",texturefollow.SpeedUToD);
 }
-void SETTEXTUREFOLLOWFORM::Load(TEXTUREFOLLOW *texturefollow,FILE *File)
+void SETSTextureFollowCWnd_Form::Load(STextureFollow *texturefollow,FILE *File)
 {
  texturefollow->Mode=(int)ReadNumber(File);
  texturefollow->MaximumTexture=(int)ReadNumber(File);
  for(int m=0;m<texturefollow->MaximumTexture;m++)
- texturefollow->TextureList[m]=SelectTextureForm.LoadTextureStruct(File);
+ texturefollow->TextureList[m]=cDialog_SelectTexture.LoadTextureStruct(File);
  texturefollow->ScrollLToR=(int)ReadNumber(File);
  texturefollow->SpeedLToR=(int)ReadNumber(File);
  texturefollow->ScrollUToD=(int)ReadNumber(File);
  texturefollow->SpeedUToD=(int)ReadNumber(File);
 }
-void SETTEXTUREFOLLOWFORM::InitializeTextureFollow(TEXTUREFOLLOW *texturefollow)
+void SETSTextureFollowCWnd_Form::InitializeTextureFollow(STextureFollow *texturefollow)
 {
  texturefollow->MaximumTexture=1;
  texturefollow->Mode=0;
@@ -332,12 +332,12 @@ void SETTEXTUREFOLLOWFORM::InitializeTextureFollow(TEXTUREFOLLOW *texturefollow)
  texturefollow->SpeedUToD=0;
 }
 //------------------------------------------------------------------------------
-TEXTUREFOLLOW SETTEXTUREFOLLOWFORM::Activate(HWND hWnd,TEXTUREFOLLOW texturefollow)
+STextureFollow SETSTextureFollowCWnd_Form::Activate(HWND hWnd,STextureFollow texturefollow)
 {
  OldTextureFollow=texturefollow;
  TextureFollow=texturefollow;
  for(int n=1;n<TextureFollow.MaximumTexture;n++)
- SelectTextureForm.CopyTextureStruct(&TextureFollow.TextureList[n],TextureFollow.TextureList[0]);
+ cDialog_SelectTexture.CopyTextureStruct(&TextureFollow.TextureList[n],TextureFollow.TextureList[0]);
  DialogBox(hProjectInstance,(LPSTR)13,hWnd,(DLGPROC)SETTEXTUREFOLLOWFORM_dlgProc);
  return(TextureFollow);
 }

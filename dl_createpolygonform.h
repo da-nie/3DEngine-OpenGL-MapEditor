@@ -13,7 +13,7 @@
 //------------------------------------------------------------------------------
 LONG WINAPI CREATEPOLYGONFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lParam);
 //------------------------------------------------------------------------------
-class CREATEPOLYGONFORM
+class CDialog_CreatePolygon
 {
  public:
   //-----------------------------------------------------------
@@ -30,7 +30,7 @@ class CREATEPOLYGONFORM
   int X_Pos;
   int Y_Pos;
   //-----------------------------------------------------------
-  CREATEPOLYGONFORM(void);
+  CDialog_CreatePolygon(void);
   //-----------------------------------------------------------
   void InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam);
   void Command(HWND hDlgs,WPARAM wParam,LPARAM lParam);

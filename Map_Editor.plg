@@ -6,78 +6,78 @@
 --------------------Configuration: Map_Editor - Win32 Release--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating command line "rc.exe /l 0x419 /fo"Release/mapeditor.res" /d "NDEBUG" "E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\mapeditor.rc"" 
-Creating temporary file "C:\WINDOWS\TEMP\RSPBE9.tmp" with contents
+Creating command line "rc.exe /l 0x419 /fo"Release/mapeditor.res" /d "NDEBUG" "E:\NE2015\Map_Editor\mapeditor.rc"" 
+Creating temporary file "C:\WINDOWS\TEMP\RSP22E.tmp" with contents
 [
 /nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /Fp"Release/Map_Editor.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\button.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\colorset.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\common.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\dl_createlightingform.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\dl_createpolygonform.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\dl_createsegmentform.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\dl_createsimplydoorform.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\dl_createsimplysectorform.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\dl_createstarform.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\dl_selecttextureform.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\dl_settexturefollowform.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\dl_settingrenderform.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\dl_showtextureform.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\dl_startposform.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\FileProcess.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\formats.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\gdi.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\lighting.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\main.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\menu.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\Polygon.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\render.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\shadow.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\static.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\surface.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\vector.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\wc_form.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\wc_menuform.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\wc_progress.cpp"
-"E:\From_Visual C++ 6.0\OpenGL\Completion project\Drivers\Engine2015\Map_Editor\tga.cpp"
+"E:\NE2015\Map_Editor\button.cpp"
+"E:\NE2015\Map_Editor\colorset.cpp"
+"E:\NE2015\Map_Editor\common.cpp"
+"E:\NE2015\Map_Editor\dl_createlightingform.cpp"
+"E:\NE2015\Map_Editor\dl_createpolygonform.cpp"
+"E:\NE2015\Map_Editor\dl_createsegmentform.cpp"
+"E:\NE2015\Map_Editor\dl_createsimplydoorform.cpp"
+"E:\NE2015\Map_Editor\dl_createsimplysectorform.cpp"
+"E:\NE2015\Map_Editor\dl_createstarform.cpp"
+"E:\NE2015\Map_Editor\dl_selecttextureform.cpp"
+"E:\NE2015\Map_Editor\dl_settexturefollowform.cpp"
+"E:\NE2015\Map_Editor\dl_settingrenderform.cpp"
+"E:\NE2015\Map_Editor\dl_showtextureform.cpp"
+"E:\NE2015\Map_Editor\dl_startposform.cpp"
+"E:\NE2015\Map_Editor\FileProcess.cpp"
+"E:\NE2015\Map_Editor\formats.cpp"
+"E:\NE2015\Map_Editor\gdi.cpp"
+"E:\NE2015\Map_Editor\lighting.cpp"
+"E:\NE2015\Map_Editor\main.cpp"
+"E:\NE2015\Map_Editor\menu.cpp"
+"E:\NE2015\Map_Editor\Polygon.cpp"
+"E:\NE2015\Map_Editor\render.cpp"
+"E:\NE2015\Map_Editor\shadow.cpp"
+"E:\NE2015\Map_Editor\static.cpp"
+"E:\NE2015\Map_Editor\surface.cpp"
+"E:\NE2015\Map_Editor\tga.cpp"
+"E:\NE2015\Map_Editor\vector.cpp"
+"E:\NE2015\Map_Editor\wc_form.cpp"
+"E:\NE2015\Map_Editor\wc_menuform.cpp"
+"E:\NE2015\Map_Editor\wc_progress.cpp"
 ]
-Creating command line "cl.exe @C:\WINDOWS\TEMP\RSPBE9.tmp" 
-Creating temporary file "C:\WINDOWS\TEMP\RSPBEA.tmp" with contents
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP22E.tmp" 
+Creating temporary file "C:\WINDOWS\TEMP\RSP22F.tmp" with contents
 [
 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:no /pdb:"Release/Map_Editor.pdb" /machine:I386 /out:"Release/Map_Editor.exe" 
-".\Release\button.obj"
-".\Release\colorset.obj"
-".\Release\common.obj"
-".\Release\dl_createlightingform.obj"
-".\Release\dl_createpolygonform.obj"
-".\Release\dl_createsegmentform.obj"
-".\Release\dl_createsimplydoorform.obj"
-".\Release\dl_createsimplysectorform.obj"
-".\Release\dl_createstarform.obj"
-".\Release\dl_selecttextureform.obj"
-".\Release\dl_settexturefollowform.obj"
-".\Release\dl_settingrenderform.obj"
-".\Release\dl_showtextureform.obj"
-".\Release\dl_startposform.obj"
-".\Release\FileProcess.obj"
-".\Release\formats.obj"
-".\Release\gdi.obj"
-".\Release\lighting.obj"
-".\Release\main.obj"
-".\Release\menu.obj"
-".\Release\Polygon.obj"
-".\Release\render.obj"
-".\Release\shadow.obj"
-".\Release\static.obj"
-".\Release\surface.obj"
-".\Release\vector.obj"
-".\Release\wc_form.obj"
-".\Release\wc_menuform.obj"
-".\Release\wc_progress.obj"
-".\Release\mapeditor.res"
-".\Release\tga.obj"
+.\Release\button.obj
+.\Release\colorset.obj
+.\Release\common.obj
+.\Release\dl_createlightingform.obj
+.\Release\dl_createpolygonform.obj
+.\Release\dl_createsegmentform.obj
+.\Release\dl_createsimplydoorform.obj
+.\Release\dl_createsimplysectorform.obj
+.\Release\dl_createstarform.obj
+.\Release\dl_selecttextureform.obj
+.\Release\dl_settexturefollowform.obj
+.\Release\dl_settingrenderform.obj
+.\Release\dl_showtextureform.obj
+.\Release\dl_startposform.obj
+.\Release\FileProcess.obj
+.\Release\formats.obj
+.\Release\gdi.obj
+.\Release\lighting.obj
+.\Release\main.obj
+.\Release\menu.obj
+.\Release\Polygon.obj
+.\Release\render.obj
+.\Release\shadow.obj
+.\Release\static.obj
+.\Release\surface.obj
+.\Release\tga.obj
+.\Release\vector.obj
+.\Release\wc_form.obj
+.\Release\wc_menuform.obj
+.\Release\wc_progress.obj
+.\Release\mapeditor.res
 ]
-Creating command line "link.exe @C:\WINDOWS\TEMP\RSPBEA.tmp"
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSP22F.tmp"
 <h3>Output Window</h3>
 Compiling resources...
 Compiling...
@@ -106,11 +106,11 @@ render.cpp
 shadow.cpp
 static.cpp
 surface.cpp
+tga.cpp
 vector.cpp
 wc_form.cpp
 wc_menuform.cpp
 wc_progress.cpp
-tga.cpp
 Linking...
 
 

@@ -18,14 +18,14 @@
 #include "gdi.h"
 
 //------------------------------------------------------------------------------
-struct SEGMENT
+struct SSegment
 {
  int X1;//координаты сегмента
  int Y1;
  int X2;
  int Y2;
- TEXTURE UpTexture;//номер верхней текстуры
- TEXTURE DownTexture;//номер нижней текстуры( у сегмента они равны)
+ STexture UpTexture;//номер верхней текстуры
+ STexture DownTexture;//номер нижней текстуры( у сегмента они равны)
  unsigned char UpEmissionR;//эмиссия верхней части
  unsigned char UpEmissionG;
  unsigned char UpEmissionB;
@@ -34,8 +34,8 @@ struct SEGMENT
  unsigned char DownEmissionB;
  int Frontier;//является ли сегмент линией раздела (0-нет)
  //--------------------
- TEXTUREFOLLOW UpTextureFollow;//последовательность анимации текстуры
- TEXTUREFOLLOW DownTextureFollow;//последовательность анимации текстуры
+ STextureFollow UpTextureFollow;//последовательность анимации текстуры
+ STextureFollow DownTextureFollow;//последовательность анимации текстуры
  //--------------------
  int SectorOne;//номер первого сектора к которому принадлежит линия
  int SectorOneType;//его класс
@@ -47,22 +47,22 @@ struct SEGMENT
 //------------------------------------------------------------------------------
 LONG WINAPI CREATESEGMENTFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lParam);
 //------------------------------------------------------------------------------
-class CREATESEGMENTFORM
+class CDialog_CreateSegment
 {
  public:
   //-----------------------------------------------------------
   HWND hDlg;
   //-----------------------------------------------------------
   HWND hCheckBox_Blend;
-  COLORSET ColorSet;
+  CColorSet ColorSet;
   //-----------------------------------------------------------
-  SEGMENT WorkingSegment;//работа идёт с этой структурой
-  SEGMENT OldWorkingSegment;//здесь сохраняются старые параметры сегмента, на случай отмены действия
+  SSegment WorkingSegment;//работа идёт с этой структурой
+  SSegment OldWorkingSegment;//здесь сохраняются старые параметры сегмента, на случай отмены действия
   int SelectSegment;//сегмент, с которым происходит работа
   int Flag;//0-создание сегмента,1-модификация старого
-  SEGMENT Segment[20000];
+  SSegment Segment[20000];
   //-----------------------------------------------------------
-  CREATESEGMENTFORM(void);
+  CDialog_CreateSegment(void);
   //-----------------------------------------------------------
   void InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam);
   void Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam);

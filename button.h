@@ -15,7 +15,7 @@
 #define OFF     1001
 #define DISABLE 1002
 //------------------------------------------------------------------------------
-class BUTTON//класс кнопки
+class CButton//класс кнопки
 {
  public:
   HWND Handle;//дескриптор кнопки
@@ -27,7 +27,7 @@ class BUTTON//класс кнопки
   void Disable(void);
 };
 //------------------------------------------------------------------------------
-class RADIOBUTTON
+class RADIOCButton
 {
  public:
   HWND Handle;
@@ -40,7 +40,7 @@ class RADIOBUTTON
   void Disable(void);
 };
 //------------------------------------------------------------------------------
-class CHECKBOX
+class CCheckBox
 {
  public:
   HWND Handle;
@@ -53,7 +53,7 @@ class CHECKBOX
   void Disable(void);
 };
 //------------------------------------------------------------------------------
-class CHECKBOX3STATE
+class CCheckBox3STATE
 {
  public:
   HWND Handle;

@@ -2,10 +2,10 @@
 
 extern HINSTANCE hProjectInstance;
 
-PROGRESS Progress;
+CWnd_Progress cWnd_Progress;
 
 //------------------------------------------------------------------------------
-void PROGRESS_Register(void)
+void CWnd_Progress_Register(void)
 {
  WNDCLASS wc;
  wc.style=CS_HREDRAW|CS_VREDRAW;
@@ -16,17 +16,17 @@ void PROGRESS_Register(void)
  wc.hCursor=LoadCursor(NULL,IDC_ARROW);
  wc.hbrBackground=(HBRUSH)(COLOR_WINDOW);
  wc.lpszMenuName=NULL;
- wc.lpszClassName="Progress";
- wc.lpfnWndProc=(WNDPROC)PROGRESS_wndProc;
+ wc.lpszClassName="cWnd_Progress";
+ wc.lpfnWndProc=(WNDPROC)CWnd_Progress_wndProc;
  RegisterClass(&wc);
 }
-LONG WINAPI PROGRESS_wndProc(HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam)
+LONG WINAPI CWnd_Progress_wndProc(HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam)
 {
  switch(msg)
  {
   case WM_CREATE:
   {
-   Progress.Create(hWnd,wParam,lParam);
+   cWnd_Progress.Create(hWnd,wParam,lParam);
    return(0);
   }
   case WM_DESTROY:
@@ -35,18 +35,18 @@ LONG WINAPI PROGRESS_wndProc(HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam)
   }
   case WM_PAINT:
   {
-   Progress.Paint(hWnd,wParam,lParam);
+   cWnd_Progress.Paint(hWnd,wParam,lParam);
    return(0);
   }
  }
  return(DefWindowProc(hWnd,msg,wParam,lParam));
 }
 //------------------------------------------------------------------------------
-void PROGRESS::Create(HWND hWnds,WPARAM wParam,LPARAM lParam)
+void CWnd_Progress::Create(HWND hWnds,WPARAM wParam,LPARAM lParam)
 {
  hWnd=hWnds;
 }
-void PROGRESS::Paint(HWND hWnds,WPARAM wParam,LPARAM lParam)
+void CWnd_Progress::Paint(HWND hWnds,WPARAM wParam,LPARAM lParam)
 {
  RECT Rect;
  GetClientRect(hWnd,&Rect);
@@ -54,7 +54,7 @@ void PROGRESS::Paint(HWND hWnds,WPARAM wParam,LPARAM lParam)
  HDC hdc=BeginPaint(hWnd,&ps);
  float r=0;
  float dr=(float)(255.0/((float)(Rect.right-Rect.left-10.0)));
- int xo=(int)(Progress*((float)(Rect.right-Rect.left-10))+5);
+ int xo=(int)(cWnd_Progress*((float)(Rect.right-Rect.left-10))+5);
  for(int x=Rect.left+5;x<=Rect.right-5;x++,r+=dr)
  {
   if (x<=xo)

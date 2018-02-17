@@ -1,8 +1,8 @@
 #include "dl_selecttextureform.h"
 
-extern SHOWTEXTUREFORM ShowTextureForm;
+extern SHOWSTextureCWnd_Form ShowTexturecWnd_Form;
 
-SELECTTEXTUREFORM SelectTextureForm;
+CDialog_SelectTexture cDialog_SelectTexture;
 
 //------------------------------------------------------------------------------
 LONG WINAPI SELECTTEXTUREFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lParam)
@@ -11,39 +11,39 @@ LONG WINAPI SELECTTEXTUREFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lP
  {
   case WM_INITDIALOG:
   {
-   SelectTextureForm.InitDialog(hDlg,wParam,lParam);
+   cDialog_SelectTexture.InitDialog(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_COMMAND:
   {
-   SelectTextureForm.Command(hDlg,wParam,lParam);
+   cDialog_SelectTexture.Command(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_PAINT:
   {
-   SelectTextureForm.Paint(hDlg,wParam,lParam);
+   cDialog_SelectTexture.Paint(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_HSCROLL:
   {
-   SelectTextureForm.HScroll(hDlg,wParam,lParam);
+   cDialog_SelectTexture.HScroll(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_VSCROLL:
   {
-   SelectTextureForm.VScroll(hDlg,wParam,lParam);
+   cDialog_SelectTexture.VScroll(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_LBUTTONUP:
   {
-   SelectTextureForm.LButtonUp(hDlg,wParam,lParam);
+   cDialog_SelectTexture.LButtonUp(hDlg,wParam,lParam);
    return(TRUE);
   }
  }
  return(FALSE);
 }
 //------------------------------------------------------------------------------
-void SELECTTEXTUREFORM::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void CDialog_SelectTexture::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  hDlg=hDlgs;
  hButton_Ok=GetDlgItem(hDlg,SELECTTEXTUREFORM_BUTTON_OK);
@@ -91,7 +91,7 @@ void SELECTTEXTUREFORM::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
   EnableWindow(hCheckBox_Rotate,FALSE);
  }
 }
-void SELECTTEXTUREFORM::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void CDialog_SelectTexture::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  int id=LOWORD(wParam);
  int ia=HIWORD(wParam);
@@ -111,7 +111,7 @@ void SELECTTEXTUREFORM::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
   if (WorkingTexture.ScaleY==0) WorkingTexture.ScaleY=100;
   EndDialog(hDlg,TRUE);
  }
- if (id==SELECTTEXTUREFORM_BUTTON_SHOWIMAGE) ShowTextureForm.Activate(WorkingTexture.TextureNo,hDlg);
+ if (id==SELECTTEXTUREFORM_BUTTON_SHOWIMAGE) ShowTexturecWnd_Form.Activate(WorkingTexture.TextureNo,hDlg);
  if (id==SELECTTEXTUREFORM_CHECKBOX_FLIP_V)
  {
   WorkingTexture.FlipVertical=SendMessage(hCheckBox_Flip_V,BM_GETCHECK,0,0);
@@ -134,9 +134,9 @@ void SELECTTEXTUREFORM::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
    char string[256];
    GetWindowText(hEdit_Offset_X,string,256);
    WorkingTexture.OffsetX=atoi(string);
-   if (WorkingTexture.OffsetX>=KeyData.TextureMap[WorkingTexture.TextureNo].Size)
+   if (WorkingTexture.OffsetX>=sKeyData.TextureMap[WorkingTexture.TextureNo].Size)
    {
-    WorkingTexture.OffsetX=KeyData.TextureMap[WorkingTexture.TextureNo].Size-1;
+    WorkingTexture.OffsetX=sKeyData.TextureMap[WorkingTexture.TextureNo].Size-1;
     itoa(WorkingTexture.OffsetX,string,10);
     SetWindowText(hEdit_Offset_X,string);
    }
@@ -150,9 +150,9 @@ void SELECTTEXTUREFORM::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
    char string[256];
    GetWindowText(hEdit_Offset_Y,string,256);
    WorkingTexture.OffsetY=atoi(string);
-   if (WorkingTexture.OffsetY>=KeyData.TextureMap[WorkingTexture.TextureNo].Size)
+   if (WorkingTexture.OffsetY>=sKeyData.TextureMap[WorkingTexture.TextureNo].Size)
    {
-    WorkingTexture.OffsetY=KeyData.TextureMap[WorkingTexture.TextureNo].Size-1;
+    WorkingTexture.OffsetY=sKeyData.TextureMap[WorkingTexture.TextureNo].Size-1;
     itoa(WorkingTexture.OffsetY,string,10);
     SetWindowText(hEdit_Offset_Y,string);
    }
@@ -160,7 +160,7 @@ void SELECTTEXTUREFORM::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
   }
  }
 }
-void SELECTTEXTUREFORM::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void CDialog_SelectTexture::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  RECT Rect;
  PAINTSTRUCT ps;
@@ -192,7 +192,7 @@ void SELECTTEXTUREFORM::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  {
   int number=hPos+x+(vPos+y)*50;
   int tms=128;
-  if (number<KeyData.MaximumTexture) tms=KeyData.TextureMap[number].Size;
+  if (number<sKeyData.MaximumTexture) tms=sKeyData.TextureMap[number].Size;
   float kx=(float)((float)tms/128.0);
   float ky=(float)((float)tms/128.0);
   float tmx=0,tmy=0;
@@ -206,11 +206,11 @@ void SELECTTEXTUREFORM::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
     unsigned char R=0;
     unsigned char G=0;
     unsigned char B=0;
-    if (number<KeyData.MaximumTexture)
+    if (number<sKeyData.MaximumTexture)
     {
-     R=KeyData.TextureMap[number].R[offset1];
-     G=KeyData.TextureMap[number].G[offset1];
-     B=KeyData.TextureMap[number].B[offset1];
+     R=sKeyData.TextureMap[number].R[offset1];
+     G=sKeyData.TextureMap[number].G[offset1];
+     B=sKeyData.TextureMap[number].B[offset1];
     }
     if (WorkingTexture.TextureNo==number)
     {
@@ -242,7 +242,7 @@ void SELECTTEXTUREFORM::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  StretchDIBits(hdc,Rect.left,Rect.top,Rect.right-Rect.left,Rect.bottom-Rect.top,0,0,128,128,TextureMap,&info,DIB_RGB_COLORS,SRCCOPY);
  EndPaint(hDlg,&ps);
 }
-void SELECTTEXTUREFORM::HScroll(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void CDialog_SelectTexture::HScroll(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  int move=0;
  int msg=LOWORD(wParam);
@@ -279,7 +279,7 @@ void SELECTTEXTUREFORM::HScroll(HWND hDlgs,WPARAM wParam,LPARAM lParam)
   InvalidateRect(hDlg,NULL,FALSE);
  }
 }
-void SELECTTEXTUREFORM::VScroll(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void CDialog_SelectTexture::VScroll(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  int move=0;
  int msg=LOWORD(wParam);
@@ -316,7 +316,7 @@ void SELECTTEXTUREFORM::VScroll(HWND hDlgs,WPARAM wParam,LPARAM lParam)
   InvalidateRect(hDlg,NULL,FALSE);
  }
 }
-void SELECTTEXTUREFORM::LButtonUp(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void CDialog_SelectTexture::LButtonUp(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  DWORD xyPos=GetMessagePos();
  POINT Point;
@@ -336,7 +336,7 @@ void SELECTTEXTUREFORM::LButtonUp(HWND hDlgs,WPARAM wParam,LPARAM lParam)
   int x=MouseX/(Rect.right-Rect.left);
   int y=MouseY/(Rect.bottom-Rect.top);
   int st=x+hPos+(y+vPos)*50;
-  if (st<KeyData.MaximumTexture)
+  if (st<sKeyData.MaximumTexture)
   {
    WorkingTexture.TextureNo=st;
    InvalidateRect(hDlg,NULL,FALSE);
@@ -344,7 +344,7 @@ void SELECTTEXTUREFORM::LButtonUp(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  }
 }
 //------------------------------------------------------------------------------
-void SELECTTEXTUREFORM::SaveTextureStruct(FILE *File,TEXTURE Texture)
+void CDialog_SelectTexture::SaveTextureStruct(FILE *File,STexture Texture)
 {
  fprintf(File,"%i ",Texture.TextureNo);
  fprintf(File,"%i ",Texture.OffsetX);
@@ -355,9 +355,9 @@ void SELECTTEXTUREFORM::SaveTextureStruct(FILE *File,TEXTURE Texture)
  fprintf(File,"%i ",Texture.FlipHorizontal);
  fprintf(File,"%i ",Texture.Rotate);
 }
-TEXTURE SELECTTEXTUREFORM::LoadTextureStruct(FILE *File)
+STexture CDialog_SelectTexture::LoadTextureStruct(FILE *File)
 {
- TEXTURE Texture;
+ STexture Texture;
  Texture.TextureNo=(int)ReadNumber(File);
  Texture.OffsetX=(int)ReadNumber(File);
  Texture.OffsetY=(int)ReadNumber(File);
@@ -368,14 +368,14 @@ TEXTURE SELECTTEXTUREFORM::LoadTextureStruct(FILE *File)
  Texture.Rotate=(int)ReadNumber(File);
  return(Texture);
 }
-int SELECTTEXTUREFORM::CompareTextureStruct(TEXTURE Texture1,TEXTURE Texture2)
+int CDialog_SelectTexture::CompareTextureStruct(STexture Texture1,STexture Texture2)
 {
  if (Texture1.TextureNo!=Texture2.TextureNo) return(0);
  return(1);
 }
-void SELECTTEXTUREFORM::CreateTextureImage(TEXTURE Texture,unsigned char *Image)
+void CDialog_SelectTexture::CreateTextureImage(STexture Texture,unsigned char *Image)
 {
- int tms=KeyData.TextureMap[Texture.TextureNo].Size;
+ int tms=sKeyData.TextureMap[Texture.TextureNo].Size;
  float kx=(float)((float)tms/128.0);
  float ky=(float)((float)tms/128.0);
  float tmx=0,tmy=0;
@@ -396,15 +396,15 @@ void SELECTTEXTUREFORM::CreateTextureImage(TEXTURE Texture,unsigned char *Image)
     ty=reserv;
    }
    int offset1=tx*tms+ty;
-   Image[offset+2]=KeyData.TextureMap[Texture.TextureNo].R[offset1];
-   Image[offset+1]=KeyData.TextureMap[Texture.TextureNo].G[offset1];
-   Image[offset]=KeyData.TextureMap[Texture.TextureNo].B[offset1];
+   Image[offset+2]=sKeyData.TextureMap[Texture.TextureNo].R[offset1];
+   Image[offset+1]=sKeyData.TextureMap[Texture.TextureNo].G[offset1];
+   Image[offset]=sKeyData.TextureMap[Texture.TextureNo].B[offset1];
   }
  }
 }
-void SELECTTEXTUREFORM::CreateTextureCoord(TEXTURE Texture,double *TX,double *TY)
+void CDialog_SelectTexture::CreateTextureCoord(STexture Texture,double *TX,double *TY)
 {
- int tms=KeyData.TextureMap[Texture.TextureNo].Size;
+ int tms=sKeyData.TextureMap[Texture.TextureNo].Size;
  int x=(int)((*(TX))*tms);
  int y=(int)((*(TY))*tms);
  x=x+(int)(Texture.OffsetX*((double)(Texture.ScaleX))/128.0);
@@ -425,7 +425,7 @@ void SELECTTEXTUREFORM::CreateTextureCoord(TEXTURE Texture,double *TX,double *TY
   *(TY)=128.0*(double)(y)/((double)tms*(double)Texture.ScaleY);
  }
 }
-void SELECTTEXTUREFORM::InitializeTextureStruct(TEXTURE *Texture)
+void CDialog_SelectTexture::InitializeTextureStruct(STexture *Texture)
 {
  Texture->ScaleX=128;
  Texture->ScaleY=128;
@@ -436,7 +436,7 @@ void SELECTTEXTUREFORM::InitializeTextureStruct(TEXTURE *Texture)
  Texture->TextureNo=0;
  Texture->Rotate=0;
 }
-void SELECTTEXTUREFORM::CopyTextureStruct(TEXTURE *T1,TEXTURE T2)
+void CDialog_SelectTexture::CopyTextureStruct(STexture *T1,STexture T2)
 {
  T1->OffsetX=T2.OffsetX;
  T1->OffsetY=T2.OffsetY;
@@ -445,12 +445,12 @@ void SELECTTEXTUREFORM::CopyTextureStruct(TEXTURE *T1,TEXTURE T2)
  T1->Rotate=T2.Rotate;
 }
 //------------------------------------------------------------------------------
-TEXTURE SELECTTEXTUREFORM::Activate(HWND hWnd,TEXTURE Texture,int mode)
+STexture CDialog_SelectTexture::Activate(HWND hWnd,STexture Texture,int mode)
 {
  Mode=mode;
  OldTexture=Texture;
  WorkingTexture=Texture;
- vPosMax=KeyData.MaximumTexture/50-1;
+ vPosMax=sKeyData.MaximumTexture/50-1;
  if (vPosMax<0) vPosMax=0;
  hPosMax=50-5;
  vPos=Texture.TextureNo/50;

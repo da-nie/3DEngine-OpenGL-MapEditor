@@ -11,7 +11,7 @@
 #define M_PI 3.141592654
 #define EPS  0.00001
 //------------------------------------------------------------------------------
-struct SETUP//настройки редактора
+struct SSettings//настройки редактора
 {
  int ShowSegmentCreateDialog;//1-диалог создания сегмента показывается,0-нет
  int ShowVector;//1-направление линии показывается
@@ -32,14 +32,14 @@ struct SETUP//настройки редактора
  int Fog_Density;//густота тумана
  int Fog_Enable;//1-туман включён
 };
-struct TEXTURE_MAP
+struct STextureMap
 {
  int Size;//размер текстуры по X и по Y (текстура всегда квадратная и кратна степени 2)
  unsigned char *R;//цвета текстуры
  unsigned char *G;
  unsigned char *B;
 };
-struct KEY_DATA//ключевая информация
+struct SKeyData//ключевая информация
 {
  int PrimaryMode;//первичный режим работы
  int SecondaryMode;//вторичный режим работы
@@ -58,7 +58,7 @@ struct KEY_DATA//ключевая информация
  int MaximumNumberOfLighting;//сколько всего на карте источников света
   
  int MaximumTexture;//максимальное число загруженных текстур
- TEXTURE_MAP *TextureMap;
+ STextureMap *TextureMap;
   
  int X[1000];//координаты рисуемого блока
  int Y[1000];
@@ -69,7 +69,7 @@ struct KEY_DATA//ключевая информация
  int SelectSectorType;//тип выбранного сектора
  HWND hWndMain;//дескриптор главной формы(нужен для её перерисовки дочерними окнами)
  HWND hWndMenu;//дескриптор окна управления(нужен для блокирования его другими окнами)
- HWND hWndProgress;//дескриптор окна прогресса рендеринга(нужен для его обновления)
+ HWND hWndcWnd_Progress;//дескриптор окна прогресса рендеринга(нужен для его обновления)
 };
 //------------------------------------------------------------------------------
 //Список режимов работы (Primary,Secondary)

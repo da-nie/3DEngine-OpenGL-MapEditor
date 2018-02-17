@@ -1,6 +1,6 @@
 #include "fileprocess.h"
 
-void FILEPROCESSED::Create(HWND hWnd)
+void CFileProcessed::Create(HWND hWnd)
 {
  strcpy(CustomFilter,"");
  strcpy(FileName,"");
@@ -28,37 +28,37 @@ void FILEPROCESSED::Create(HWND hWnd)
  OFN.lpTemplateName=NULL;
  OFN.lCustData=0;
 }
-int FILEPROCESSED::Open(void)
+int CFileProcessed::Open(void)
 {
  int result=GetOpenFileName(&OFN);
  GetCurrentDirectory(1024,InitialDir);
  OFN.lpstrInitialDir=InitialDir;
  return(result);
 }
-int FILEPROCESSED::Save(void)
+int CFileProcessed::Save(void)
 {
  int result=GetSaveFileName(&OFN);
  GetCurrentDirectory(1024,InitialDir);
  OFN.lpstrInitialDir=InitialDir;
  return(result);
 }
-void FILEPROCESSED::SetFilter(char *filter)
+void CFileProcessed::SetFilter(char *filter)
 {
  OFN.lpstrFilter=filter;
 }
-int FILEPROCESSED::StartOpen(char *BarName,char *Filter)
+int CFileProcessed::StartOpen(char *BarName,char *Filter)
 {
  strcpy(Title,BarName);
  SetFilter(Filter);
  return(Open());
 }
-int FILEPROCESSED::StartSave(char *BarName,char *Filter)
+int CFileProcessed::StartSave(char *BarName,char *Filter)
 {
  strcpy(Title,BarName);
  SetFilter(Filter);
  return(Save());
 }
-void FILEPROCESSED::SetTitle(char *title)
+void CFileProcessed::SetTitle(char *title)
 {
  strcpy(Title,title);
 }

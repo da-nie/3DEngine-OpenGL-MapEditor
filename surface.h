@@ -1,15 +1,15 @@
-#ifndef SURFACE_H
-#define SURFACE_H
+#ifndef SSurface_H
+#define SSurface_H
 
 #include "dl_selecttextureform.h"
 #include "vector.h"
 
-struct SEGMENT_PACKAGE
+struct SSegmentPackage
 {
  double X[4];
  double Y[4];
  double Z[4];
- TEXTURE Texture;
+ STexture Texture;
  SVector Normal;
  int Segment;
  int Location;
@@ -18,13 +18,13 @@ struct SEGMENT_PACKAGE
  double Z_Left_Up;
  int BarrierType;
 };
-struct SECTOR_PACKAGE
+struct SSectorPackage
 {
  int Vertex;
  double X[100];
  double Y[100];
  double Z[100];
- TEXTURE Texture;
+ STexture Texture;
  int Sector;
  int SectorType;
  SVector Normal;
@@ -32,13 +32,13 @@ struct SECTOR_PACKAGE
  int BarrierType;
  int Dz;
 };
-struct SURFACE
+struct SSurface
 {
  int Vertex;
  double X[100];
  double Y[100];
  double Z[100];
- TEXTURE Texture;
+ STexture Texture;
  int Location;//0-просто поверхность, 1-верхняя,2-нижняя (это нужно для отделения текстур линий раздела)
  //у секторов бывают лишь 1 или 2-потолок и пол.
  int Segment;//номер сегмента к которому относится поверхность(если это стена)
@@ -46,8 +46,8 @@ struct SURFACE
  int Sector;//номер сектора к которому относится поверхность(если это пол-потолок)
  int Dz;//смещение по высоте для поверхностей (только для полов-потолков)
  SVector Normal;
- SURFACE *Next;
- SURFACE *Previous;
+ SSurface *Next;
+ SSurface *Previous;
  int BarrierType;//0-поверхность сплошная, 1-поверхность-стекло (только для сегментов), 2-поверхность не создаёт теней (для движущихся стен)
  //данные для обработки текстуры (только для сегментов)
  double X_Left_Up;
@@ -55,8 +55,8 @@ struct SURFACE
  double Z_Left_Up;
 };
 //------------------------------------------------------------------------------
-void NewSurfaceSegment(SURFACE **Surface,SEGMENT_PACKAGE SP);
-void NewSurfaceSector(SURFACE **Surface,SECTOR_PACKAGE SCP);
-void DeleteAllSurface(SURFACE **Surface);
+void NewSurfaceSegment(SSurface **Surface,SSegmentPackage SP);
+void NewSurfaceSector(SSurface **Surface,SSectorPackage SCP);
+void DeleteAllSurface(SSurface **Surface);
 
 #endif

@@ -1,10 +1,10 @@
 #include "surface.h"
 
 //------------------------------------------------------------------------------
-void NewSurfaceSegment(SURFACE **Surface,SEGMENT_PACKAGE SP)
+void NewSurfaceSegment(SSurface **Surface,SSegmentPackage SP)
 {
- SURFACE *NextSurface=new SURFACE;
- SURFACE *WorkSurface=*Surface;
+ SSurface *NextSurface=new SSurface;
+ SSurface *WorkSurface=*Surface;
  NextSurface->Next=NULL;
  NextSurface->Previous=WorkSurface;
  NextSurface->Texture=SP.Texture;
@@ -28,10 +28,10 @@ void NewSurfaceSegment(SURFACE **Surface,SEGMENT_PACKAGE SP)
  if (WorkSurface!=NULL) WorkSurface->Next=NextSurface;
  *Surface=NextSurface;
 }
-void NewSurfaceSector(SURFACE **Surface,SECTOR_PACKAGE SCP)
+void NewSurfaceSector(SSurface **Surface,SSectorPackage SCP)
 {
- SURFACE *NextSurface=new SURFACE;
- SURFACE *WorkSurface=*Surface;
+ SSurface *NextSurface=new SSurface;
+ SSurface *WorkSurface=*Surface;
  NextSurface->Next=NULL;
  NextSurface->Previous=WorkSurface;
  NextSurface->Texture=SCP.Texture;
@@ -53,13 +53,13 @@ void NewSurfaceSector(SURFACE **Surface,SECTOR_PACKAGE SCP)
  if (WorkSurface!=NULL) WorkSurface->Next=NextSurface;
  *Surface=NextSurface;
 }
-void DeleteAllSurface(SURFACE **Surface)
+void DeleteAllSurface(SSurface **Surface)
 {
- SURFACE *WorkSurface=*Surface;
+ SSurface *WorkSurface=*Surface;
  while(1)
  {
   if (WorkSurface==NULL) break;
-  SURFACE *PreviousSurface=WorkSurface->Previous;
+  SSurface *PreviousSurface=WorkSurface->Previous;
   delete(WorkSurface);
   WorkSurface=PreviousSurface;
  }

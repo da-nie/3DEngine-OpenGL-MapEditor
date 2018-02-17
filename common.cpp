@@ -1,6 +1,6 @@
 #include "common.h"
  
-SETUP SetUp;//настройки редактора
-KEY_DATA KeyData;//ключевая информация
+SSettings sSettings;//настройки редактора
+SKeyData sKeyData;//ключевая информация
 HINSTANCE hProjectInstance;
 MSG msg;

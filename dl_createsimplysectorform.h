@@ -17,17 +17,17 @@
 #include "surface.h"
 
 //------------------------------------------------------------------------------
-struct SIMPLY_SECTOR
+struct SSimplySector
 {
  int UpLevel;//уровень потолка
  int DownLevel;//уровень пола
- TEXTURE UpTexture;//текстура потолка
- TEXTURE DownTexture;//текстура пола
+ STexture UpTexture;//текстура потолка
+ STexture DownTexture;//текстура пола
  int Vertex;//число вершин, задающих сектор
  int X[100];//координаты этих вершин
  int Y[100];
- TEXTUREFOLLOW UpTextureFollow;//последовательность анимации текстуры потолка
- TEXTUREFOLLOW DownTextureFollow;//последовательность анимации текстуры пола
+ STextureFollow UpTextureFollow;//последовательность анимации текстуры потолка
+ STextureFollow DownTextureFollow;//последовательность анимации текстуры пола
  unsigned char UpEmissionR;//эмиссия потолка
  unsigned char UpEmissionG;
  unsigned char UpEmissionB;
@@ -38,7 +38,7 @@ struct SIMPLY_SECTOR
 //------------------------------------------------------------------------------
 LONG WINAPI CREATESIMPLYSECTORFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lParam);
 //------------------------------------------------------------------------------
-class CREATESIMPLYSECTORFORM
+class CDialog_CreateSimplySector
 {
  public:
   //-----------------------------------------------------------
@@ -46,14 +46,14 @@ class CREATESIMPLYSECTORFORM
   //-----------------------------------------------------------
   HWND hEdit_UpLevel;
   HWND hEdit_DownLevel;
-  COLORSET ColorSet;
+  CColorSet ColorSet;
   //-----------------------------------------------------------
-  SIMPLY_SECTOR WorkingSector;
+  SSimplySector WorkingSector;
   int Flag;
   int SelectSector;
-  SIMPLY_SECTOR Sector[5000];
+  SSimplySector Sector[5000];
   //-----------------------------------------------------------
-  CREATESIMPLYSECTORFORM(void);
+  CDialog_CreateSimplySector(void);
   //-----------------------------------------------------------
   void InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam);
   void Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam);
@@ -68,8 +68,8 @@ class CREATESIMPLYSECTORFORM
   int GetSectorInScreen(int x,int y);//возвращает номер сектора по экранным координатам или -1
   int GetSectorInMap(float x,float y,int number);//возвращает номер сектора начиная с number по координатам на карте или -1
   void DrawAllSector(int xLeftMap,int yTopMap);//рисует все сектора
-  void GenerateFloor(int n,SECTOR_PACKAGE *SCP);//заполняет параметрами пола
-  void GenerateCeiling(int n,SECTOR_PACKAGE *SCP);//заполняет параметрами потолка
+  void GenerateFloor(int n,SSectorPackage *SCP);//заполняет параметрами пола
+  void GenerateCeiling(int n,SSectorPackage *SCP);//заполняет параметрами потолка
   int GetUpLevelFromSegment(int n);//возвращает верхний уровень обычного сегмента для рендеринга
   int GetDownLevelFromSegment(int n);//возвращает нижний уровень обычного сегмента для рендеринга
   int GetUpLevelFromFrontier(int n);//возвращает верхний уровень линии раздела для рендеринга

@@ -1,5 +1,5 @@
-#ifndef RENDER_H
-#define RENDER_H
+#ifndef CRender_H
+#define CRender_H
 
 #include <windows.h>
 #include <stdio.h>
@@ -20,12 +20,12 @@
 #include "dl_createsimplysectorform.h"
 #include "dl_createsimplydoorform.h"
 
-class RENDER
+class CRender
 {
  public:
   //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
-  RENDER(char *FileName);
+  CRender(char *FileName);
   //----------------------------------------------------------------------------
 };
 #endif

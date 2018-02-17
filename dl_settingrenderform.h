@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 LONG WINAPI SETTINGRENDERFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lParam);
 //------------------------------------------------------------------------------
-class SETTINGRENDERFORM
+class CDialog_SettingsRender
 {
  public:
   //-----------------------------------------------------------
@@ -21,7 +21,7 @@ class SETTINGRENDERFORM
   HWND hEdit_Quadric;
   HWND hEdit_FogDensity;
   HWND hCheckBox_FogEnable;
-  COLORSET ColorSet;
+  CColorSet ColorSet;
   //-----------------------------------------------------------
   unsigned char A_R,A_G,A_B;
   unsigned char F_R,F_G,F_B;

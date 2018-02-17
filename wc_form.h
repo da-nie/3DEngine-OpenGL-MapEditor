@@ -33,10 +33,10 @@
 #define FORM_MENU_FILE_CREATESTAGE     1003
 #define FORM_MENU_FILE_EXIT            1004
 #define FORM_MENU_SETTING_VECTOR       1010
-#define FORM_MENU_SETTING_SHOWSEGMENT  1011
+#define FORM_MENU_SETTING_SHOWSSegment  1011
 #define FORM_MENU_SETTING_SHOWSECTOR   1012
-#define FORM_MENU_SETTING_SHOWLIGHTING 1013
-#define FORM_MENU_SETTING_RENDER       1014
+#define FORM_MENU_SETTING_SHOWSLighting 1013
+#define FORM_MENU_SETTING_CRender       1014
  
 #define FORM_BUTTON_RESET              1200
 #define FORM_BUTTON_EXECUTE_DIALOG     1201
@@ -45,7 +45,7 @@
 void FORM_Register(void);
 LONG WINAPI FORM_wndProc(HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam);
 //------------------------------------------------------------------------------
-class FORM
+class CWnd_Form
 {
  public:
   //-----------------------------------------------------------
@@ -54,16 +54,16 @@ class FORM
   //-----------------------------------------------------------
   HMENU hSettingMenu;
   //-----------------------------------------------------------
-  STATIC Static_Form;
-  STATIC Static_Text1;
-  STATIC Static_Text2;
-  STATIC Static_Text3;
-  STATIC Static_Text4;
-  BUTTON Button_Reset;
-  BUTTON Button_ExecuteDialog;
-  CHECKBOX CheckBox_ShowDialog;
-  FILEPROCESSED FPRS;
-  FILEPROCESSED FPRS_1;
+  CStatic Static_cWnd_Form;
+  CStatic Static_Text1;
+  CStatic Static_Text2;
+  CStatic Static_Text3;
+  CStatic Static_Text4;
+  CButton Button_Reset;
+  CButton Button_ExecuteDialog;
+  CCheckBox CheckBox_ShowDialog;
+  CFileProcessed FPRS;
+  CFileProcessed FPRS_1;
   //-----------------------------------------------------------
   int xLeftMap;//левый угол
   int yTopMap;//верхний угол

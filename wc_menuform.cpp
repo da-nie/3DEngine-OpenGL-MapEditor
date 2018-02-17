@@ -1,9 +1,9 @@
 #include "wc_menuform.h"
 
-extern KEY_DATA KeyData;//ключевая информация
+extern SKeyData sKeyData;//ключевая информация
 extern HINSTANCE hProjectInstance;
 
-MENUFORM MenuForm;
+CWnd_Menu cWnd_Menu;
 
 //------------------------------------------------------------------------------
 void MENUFORM_Register(void)
@@ -17,7 +17,7 @@ void MENUFORM_Register(void)
  wc.hCursor=LoadCursor(NULL,IDC_ARROW);
  wc.hbrBackground=(HBRUSH)(COLOR_WINDOW);
  wc.lpszMenuName=NULL;
- wc.lpszClassName="MenuForm";
+ wc.lpszClassName="cWnd_Menu";
  wc.lpfnWndProc=(WNDPROC)MENUFORM_wndProc;
  RegisterClass(&wc);
 }
@@ -27,7 +27,7 @@ LONG WINAPI MENUFORM_wndProc(HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam)
  {
   case WM_CREATE:
   {
-   MenuForm.Create(hWnd,wParam,lParam);
+   cWnd_Menu.Create(hWnd,wParam,lParam);
    return(0);
   }
   case WM_DESTROY:
@@ -36,17 +36,17 @@ LONG WINAPI MENUFORM_wndProc(HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam)
   }
   case WM_COMMAND:
   {
-   MenuForm.Command(hWnd,wParam,lParam);
+   cWnd_Menu.Command(hWnd,wParam,lParam);
    return(0);
   }
  }
  return(DefWindowProc(hWnd,msg,wParam,lParam));
 }
 //------------------------------------------------------------------------------
-void MENUFORM::Create(HWND hWnds,WPARAM wParam,LPARAM lParam)
+void CWnd_Menu::Create(HWND hWnds,WPARAM wParam,LPARAM lParam)
 {
  hWnd=hWnds;
- KeyData.hWndMenu=hWnd;
+ sKeyData.hWndMenu=hWnd;
  Static_Text1.Create(8,8,300,20,"Режим работы редактора карт",0,hWnd,hProjectInstance);
  Static_Text2.Create(8,28,300,20,"-",0,hWnd,hProjectInstance);
  Static_TextInfo[0].Create(8,58,300,170,"Всего секторов:",0,hWnd,hProjectInstance);
@@ -77,204 +77,204 @@ void MENUFORM::Create(HWND hWnds,WPARAM wParam,LPARAM lParam)
  Static_TextInfo[24].Create(8,308,300,170,"Обычных телепортаторов:",0,hWnd,hProjectInstance);
  Static_TextInfo[25].Create(188,308,300,50,"0",0,hWnd,hProjectInstance);
 }
-void MENUFORM::Command(HWND hWnds,WPARAM wParam,LPARAM lParam)
+void CWnd_Menu::Command(HWND hWnds,WPARAM wParam,LPARAM lParam)
 {
  int id=LOWORD(wParam);
- KeyData.MaximumPset=0;//всего точек в рисуемом блоке
- InvalidateRect(KeyData.hWndMain,NULL,FALSE);
- KeyData.SelectLine=-1;
- KeyData.SelectLighting=-1;
- if (id==MENUFORM_MENU_CREATE_SEGMENT)
+ sKeyData.MaximumPset=0;//всего точек в рисуемом блоке
+ InvalidateRect(sKeyData.hWndMain,NULL,FALSE);
+ sKeyData.SelectLine=-1;
+ sKeyData.SelectLighting=-1;
+ if (id==MENUFORM_MENU_CREATE_SSegment)
  {
-  KeyData.PrimaryMode=1;
-  KeyData.SecondaryMode=0;
+  sKeyData.PrimaryMode=1;
+  sKeyData.SecondaryMode=0;
   Static_Text2.SetText("Создание сегментов");
  }
  if (id==MENUFORM_MENU_CREATE_FRONTIER)
  {
-  KeyData.PrimaryMode=1;
-  KeyData.SecondaryMode=1;
+  sKeyData.PrimaryMode=1;
+  sKeyData.SecondaryMode=1;
   Static_Text2.SetText("Создание линий раздела");
  }
- if (id==MENUFORM_MENU_CREATE_LIGHTING)
+ if (id==MENUFORM_MENU_CREATE_SLighting)
  {
-  KeyData.PrimaryMode=3;
-  KeyData.SecondaryMode=0;
+  sKeyData.PrimaryMode=3;
+  sKeyData.SecondaryMode=0;
   Static_Text2.SetText("Создание источников света");
  }
  if (id==MENUFORM_MENU_CREATE_STARTPOS)
  {
-  KeyData.PrimaryMode=4;
-  KeyData.SecondaryMode=0;
+  sKeyData.PrimaryMode=4;
+  sKeyData.SecondaryMode=0;
   Static_Text2.SetText("Задание стартовой позиции");
  }
- if (id==MENUFORM_MENU_DELETE_SEGMENT)
+ if (id==MENUFORM_MENU_DELETE_SSegment)
  {
-  KeyData.PrimaryMode=6;
-  KeyData.SecondaryMode=0;
+  sKeyData.PrimaryMode=6;
+  sKeyData.SecondaryMode=0;
   Static_Text2.SetText("Удаление сегментов");
  }
  if (id==MENUFORM_MENU_DELETE_FRONTIER)
  {
-  KeyData.PrimaryMode=6;
-  KeyData.SecondaryMode=1;
+  sKeyData.PrimaryMode=6;
+  sKeyData.SecondaryMode=1;
   Static_Text2.SetText("Удаление линий раздела");
  }
  if (id==MENUFORM_MENU_DELETE_LINE)
  {
-  KeyData.PrimaryMode=6;
-  KeyData.SecondaryMode=2;
+  sKeyData.PrimaryMode=6;
+  sKeyData.SecondaryMode=2;
   Static_Text2.SetText("Удаление любых линий");
  }
  if (id==MENUFORM_MENU_DELETE_SECTOR)
  {
-  KeyData.PrimaryMode=7;
-  KeyData.SecondaryMode=0;
+  sKeyData.PrimaryMode=7;
+  sKeyData.SecondaryMode=0;
   Static_Text2.SetText("Удаление секторов");
  }
- if (id==MENUFORM_MENU_DELETE_LIGHTING)
+ if (id==MENUFORM_MENU_DELETE_SLighting)
  {
-  KeyData.PrimaryMode=8;
-  KeyData.SecondaryMode=0;
+  sKeyData.PrimaryMode=8;
+  sKeyData.SecondaryMode=0;
   Static_Text2.SetText("Удаление источников света");
  }
- if (id==MENUFORM_MENU_MODIFYCATION_SEGMENT)
+ if (id==MENUFORM_MENU_MODIFYCATION_SSegment)
  {
-  KeyData.PrimaryMode=9;
-  KeyData.SecondaryMode=0;
+  sKeyData.PrimaryMode=9;
+  sKeyData.SecondaryMode=0;
   Static_Text2.SetText("Модификация сегментов");
  }
  if (id==MENUFORM_MENU_MODIFYCATION_FRONTIER)
  {
-  KeyData.PrimaryMode=9;
-  KeyData.SecondaryMode=1;
+  sKeyData.PrimaryMode=9;
+  sKeyData.SecondaryMode=1;
   Static_Text2.SetText("Модификация линии раздела");
  }
  if (id==MENUFORM_MENU_MODIFYCATION_SECTOR)
  {
-  KeyData.PrimaryMode=10;
-  KeyData.SecondaryMode=0;
+  sKeyData.PrimaryMode=10;
+  sKeyData.SecondaryMode=0;
   Static_Text2.SetText("Модификация секторов");
  }
- if (id==MENUFORM_MENU_MODIFYCATION_LIGHTING)
+ if (id==MENUFORM_MENU_MODIFYCATION_SLighting)
  {
-  KeyData.PrimaryMode=11;
-  KeyData.SecondaryMode=0;
+  sKeyData.PrimaryMode=11;
+  sKeyData.SecondaryMode=0;
   Static_Text2.SetText("Модификация источников света");
  }
  if (id==MENUFORM_MENU_FIGURE_CORRECTPOLYGON)
  {
-  KeyData.PrimaryMode=5;
-  KeyData.SecondaryMode=0;
+  sKeyData.PrimaryMode=5;
+  sKeyData.SecondaryMode=0;
   Static_Text2.SetText("Создание многоугольника");
  }
  if (id==MENUFORM_MENU_FIGURE_STAR)
  {
-  KeyData.PrimaryMode=5;
-  KeyData.SecondaryMode=1;
+  sKeyData.PrimaryMode=5;
+  sKeyData.SecondaryMode=1;
   Static_Text2.SetText("Создание звезды");
  }
  if (id==MENUFORM_MENU_SECTOR_SIMPLYSECTOR)
  {
-  KeyData.PrimaryMode=2;
-  KeyData.SecondaryMode=0;
+  sKeyData.PrimaryMode=2;
+  sKeyData.SecondaryMode=0;
   Static_Text2.SetText("Создание обычного сектора");
  }
  if (id==MENUFORM_MENU_SECTOR_SIMPLYDOOR)
  {
-  KeyData.PrimaryMode=2;
-  KeyData.SecondaryMode=1;
+  sKeyData.PrimaryMode=2;
+  sKeyData.SecondaryMode=1;
   Static_Text2.SetText("Создание обычной двери");
  }
  if (id==MENUFORM_MENU_SECTOR_DISPOSABLEDOOR)
  {
-  KeyData.PrimaryMode=2;
-  KeyData.SecondaryMode=2;
+  sKeyData.PrimaryMode=2;
+  sKeyData.SecondaryMode=2;
   Static_Text2.SetText("Создание одноразовой двери");
  }
  if (id==MENUFORM_MENU_SECTOR_CLOSEDDOOR)
  {
-  KeyData.PrimaryMode=2;
-  KeyData.SecondaryMode=3;
+  sKeyData.PrimaryMode=2;
+  sKeyData.SecondaryMode=3;
   Static_Text2.SetText("Создание запертой двери");
  }
  if (id==MENUFORM_MENU_SECTOR_AUTOCLOSEDDOOR)
  {
-  KeyData.PrimaryMode=2;
-  KeyData.SecondaryMode=4;
+  sKeyData.PrimaryMode=2;
+  sKeyData.SecondaryMode=4;
   Static_Text2.SetText("Создание закрывающейся двери");
  }
- if (id==MENUFORM_MENU_SECTOR_SIMPLYPLATFORM)
+ if (id==MENUFORM_MENU_SECTOR_SIMPLYPLATCWnd_Form)
  {
-  KeyData.PrimaryMode=2;
-  KeyData.SecondaryMode=5;
+  sKeyData.PrimaryMode=2;
+  sKeyData.SecondaryMode=5;
   Static_Text2.SetText("Создание обычной платформы");
  }
- if (id==MENUFORM_MENU_SECTOR_INACTIVEPLATFORM)
+ if (id==MENUFORM_MENU_SECTOR_INACTIVEPLATCWnd_Form)
  {
-  KeyData.PrimaryMode=2;
-  KeyData.SecondaryMode=6;
+  sKeyData.PrimaryMode=2;
+  sKeyData.SecondaryMode=6;
   Static_Text2.SetText("Создание неактивной платформы");
  }
- if (id==MENUFORM_MENU_SECTOR_DISCONNECTEDPLATFORM)
+ if (id==MENUFORM_MENU_SECTOR_DISCONNECTEDPLATCWnd_Form)
  {
-  KeyData.PrimaryMode=2;
-  KeyData.SecondaryMode=7;
+  sKeyData.PrimaryMode=2;
+  sKeyData.SecondaryMode=7;
   Static_Text2.SetText("Созд. отключающейся платформы");
  }
  if (id==MENUFORM_MENU_SECTOR_SIMPLYBRIDGE)
  {
-  KeyData.PrimaryMode=2;
-  KeyData.SecondaryMode=8;
+  sKeyData.PrimaryMode=2;
+  sKeyData.SecondaryMode=8;
   Static_Text2.SetText("Создание обычного мостика");
  }
  if (id==MENUFORM_MENU_SECTOR_SIMPLYTELEPORT)
  {
-  KeyData.PrimaryMode=2;
-  KeyData.SecondaryMode=9;
+  sKeyData.PrimaryMode=2;
+  sKeyData.SecondaryMode=9;
   Static_Text2.SetText("Создание обычного телепортатора");
  }
 }
 //------------------------------------------------------------------------------
-void MENUFORM::UpDate(void)
+void CWnd_Menu::UpDate(void)
 {
- KeyData.MaximumNumberOfAllSector=0;
- KeyData.MaximumNumberOfAllSector+=KeyData.MaximumNumberOfSimplySector;
- KeyData.MaximumNumberOfAllSector+=KeyData.MaximumNumberOfSimplyDoor;
- KeyData.MaximumNumberOfAllSector+=KeyData.MaximumNumberOfDisposableDoor;
- KeyData.MaximumNumberOfAllSector+=KeyData.MaximumNumberOfClosedDoor;
- KeyData.MaximumNumberOfAllSector+=KeyData.MaximumNumberOfAutoClosedDoor;
- KeyData.MaximumNumberOfAllSector+=KeyData.MaximumNumberOfSimplyPlatform;
- KeyData.MaximumNumberOfAllSector+=KeyData.MaximumNumberOfInactivePlatform;
- KeyData.MaximumNumberOfAllSector+=KeyData.MaximumNumberOfDisconnectPlatform;
- KeyData.MaximumNumberOfAllSector+=KeyData.MaximumNumberOfSimplyBridge;
- KeyData.MaximumNumberOfAllSector+=KeyData.MaximumNumberOfSimplyTeleport;
+ sKeyData.MaximumNumberOfAllSector=0;
+ sKeyData.MaximumNumberOfAllSector+=sKeyData.MaximumNumberOfSimplySector;
+ sKeyData.MaximumNumberOfAllSector+=sKeyData.MaximumNumberOfSimplyDoor;
+ sKeyData.MaximumNumberOfAllSector+=sKeyData.MaximumNumberOfDisposableDoor;
+ sKeyData.MaximumNumberOfAllSector+=sKeyData.MaximumNumberOfClosedDoor;
+ sKeyData.MaximumNumberOfAllSector+=sKeyData.MaximumNumberOfAutoClosedDoor;
+ sKeyData.MaximumNumberOfAllSector+=sKeyData.MaximumNumberOfSimplyPlatform;
+ sKeyData.MaximumNumberOfAllSector+=sKeyData.MaximumNumberOfInactivePlatform;
+ sKeyData.MaximumNumberOfAllSector+=sKeyData.MaximumNumberOfDisconnectPlatform;
+ sKeyData.MaximumNumberOfAllSector+=sKeyData.MaximumNumberOfSimplyBridge;
+ sKeyData.MaximumNumberOfAllSector+=sKeyData.MaximumNumberOfSimplyTeleport;
  char string[255];
- itoa(KeyData.MaximumNumberOfAllSector,string,10);
+ itoa(sKeyData.MaximumNumberOfAllSector,string,10);
  Static_TextInfo[1].SetText(string);
- itoa(KeyData.MaximumNumberOfLine,string,10);
+ itoa(sKeyData.MaximumNumberOfLine,string,10);
  Static_TextInfo[3].SetText(string);
- itoa(KeyData.MaximumNumberOfLighting,string,10);
+ itoa(sKeyData.MaximumNumberOfLighting,string,10);
  Static_TextInfo[5].SetText(string);
- itoa(KeyData.MaximumNumberOfSimplySector,string,10);
+ itoa(sKeyData.MaximumNumberOfSimplySector,string,10);
  Static_TextInfo[7].SetText(string);
- itoa(KeyData.MaximumNumberOfSimplyDoor,string,10);
+ itoa(sKeyData.MaximumNumberOfSimplyDoor,string,10);
  Static_TextInfo[9].SetText(string);
- itoa(KeyData.MaximumNumberOfDisposableDoor,string,10);
+ itoa(sKeyData.MaximumNumberOfDisposableDoor,string,10);
  Static_TextInfo[11].SetText(string);
- itoa(KeyData.MaximumNumberOfClosedDoor,string,10);
+ itoa(sKeyData.MaximumNumberOfClosedDoor,string,10);
  Static_TextInfo[13].SetText(string);
- itoa(KeyData.MaximumNumberOfAutoClosedDoor,string,10);
+ itoa(sKeyData.MaximumNumberOfAutoClosedDoor,string,10);
  Static_TextInfo[15].SetText(string);
- itoa(KeyData.MaximumNumberOfSimplyPlatform,string,10);
+ itoa(sKeyData.MaximumNumberOfSimplyPlatform,string,10);
  Static_TextInfo[17].SetText(string);
- itoa(KeyData.MaximumNumberOfInactivePlatform,string,10);
+ itoa(sKeyData.MaximumNumberOfInactivePlatform,string,10);
  Static_TextInfo[19].SetText(string);
- itoa(KeyData.MaximumNumberOfDisconnectPlatform,string,10);
+ itoa(sKeyData.MaximumNumberOfDisconnectPlatform,string,10);
  Static_TextInfo[21].SetText(string);
- itoa(KeyData.MaximumNumberOfSimplyBridge,string,10);
+ itoa(sKeyData.MaximumNumberOfSimplyBridge,string,10);
  Static_TextInfo[23].SetText(string);
- itoa(KeyData.MaximumNumberOfSimplyTeleport,string,10);
+ itoa(sKeyData.MaximumNumberOfSimplyTeleport,string,10);
  Static_TextInfo[25].SetText(string);
 }
  

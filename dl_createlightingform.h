@@ -14,7 +14,7 @@
 #include "gdi.h"
 
 //------------------------------------------------------------------------------
-struct LIGHTING
+struct SLighting
 {
  int X;
  int Y;
@@ -36,7 +36,7 @@ struct LIGHTING
 //------------------------------------------------------------------------------
 LONG WINAPI CREATELIGHTINGFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lParam);
 //------------------------------------------------------------------------------
-class CREATELIGHTINGFORM
+class CDialog_CreateLighting
 {
  public:
   //-----------------------------------------------------------
@@ -56,15 +56,15 @@ class CREATELIGHTINGFORM
   HWND hRadioButton_Mode2;
   HWND hRadioButton_Mode3;
   HWND hRadioButton_Mode4;
-  COLORSET ColorSet;
+  CColorSet ColorSet;
   //-----------------------------------------------------------
-  LIGHTING Lighting[1000];
+  SLighting Lighting[1000];
   //-----------------------------------------------------------
-  LIGHTING WorkingLighting;
+  SLighting WorkingLighting;
   int SelectLighting;//источник света, с которым мы работаем
   int Flag;//0-создание источника света,1-его модификация
   //-----------------------------------------------------------
-  CREATELIGHTINGFORM(void);
+  CDialog_CreateLighting(void);
   //-----------------------------------------------------------
   void InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam);
   void Command(HWND hDlgs,WPARAM wParam,LPARAM lParam);

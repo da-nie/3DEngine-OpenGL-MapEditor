@@ -5,13 +5,13 @@
 #include "resource.h"
 #include "common.h"
 
-extern KEY_DATA KeyData;//ключевая информация
+extern SKeyData sKeyData;//ключевая информация
 extern HINSTANCE hProjectInstance;
 
 //------------------------------------------------------------------------------
 LONG WINAPI SHOWTEXTUREFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lParam);
 //------------------------------------------------------------------------------
-class SHOWTEXTUREFORM
+class SHOWSTextureCWnd_Form
 {
  public:
   //-----------------------------------------------------------

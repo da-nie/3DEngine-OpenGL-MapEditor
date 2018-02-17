@@ -1,7 +1,7 @@
 #include "dl_showtextureform.h"
 
 //------------------------------------------------------------------------------
-SHOWTEXTUREFORM ShowTextureForm;
+SHOWSTextureCWnd_Form ShowTexturecWnd_Form;
 
 //------------------------------------------------------------------------------
 LONG WINAPI SHOWTEXTUREFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lParam)
@@ -10,34 +10,34 @@ LONG WINAPI SHOWTEXTUREFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lPar
  {
   case WM_INITDIALOG:
   {
-   ShowTextureForm.InitDialog(hDlg,wParam,lParam);
+   ShowTexturecWnd_Form.InitDialog(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_COMMAND:
   {
-   ShowTextureForm.Command(hDlg,wParam,lParam);
+   ShowTexturecWnd_Form.Command(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_PAINT:
   {
-   ShowTextureForm.Paint(hDlg,wParam,lParam);
+   ShowTexturecWnd_Form.Paint(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_HSCROLL:
   {
-   ShowTextureForm.HScroll(hDlg,wParam,lParam);
+   ShowTexturecWnd_Form.HScroll(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_VSCROLL:
   {
-   ShowTextureForm.VScroll(hDlg,wParam,lParam);
+   ShowTexturecWnd_Form.VScroll(hDlg,wParam,lParam);
    return(TRUE);
   }
  }
  return(FALSE);
 }
 //------------------------------------------------------------------------------
-void SHOWTEXTUREFORM::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void SHOWSTextureCWnd_Form::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  hDlg=hDlgs;
  hScroll_Vertical=GetDlgItem(hDlg,SHOWTEXTUREFORM_SCROLL_VERTICAL);
@@ -45,11 +45,11 @@ void SHOWTEXTUREFORM::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  hStatic_Height=GetDlgItem(hDlg,SHOWTEXTUREFORM_STATIC_HEIGHT);
  hStatic_Width=GetDlgItem(hDlg,SHOWTEXTUREFORM_STATIC_WIDTH);
  char string[256];
- itoa(KeyData.TextureMap[TextureNo].Size,string,10);
+ itoa(sKeyData.TextureMap[TextureNo].Size,string,10);
  SetWindowText(hStatic_Height,string);
  SetWindowText(hStatic_Width,string);
   
- hPosMax=KeyData.TextureMap[TextureNo].Size-256;
+ hPosMax=sKeyData.TextureMap[TextureNo].Size-256;
  vPosMax=hPosMax;
  hPos=0;
  vPos=0;
@@ -66,23 +66,23 @@ void SHOWTEXTUREFORM::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
   EnableWindow(hScroll_Vertical,FALSE);
  }
 }
-void SHOWTEXTUREFORM::Command(HWND hWnds,WPARAM wParam,LPARAM lParam)
+void SHOWSTextureCWnd_Form::Command(HWND hWnds,WPARAM wParam,LPARAM lParam)
 {
  int id=LOWORD(wParam);
  if (id==SHOWTEXTUREFORM_BUTTON_EXIT)
  {
-  InvalidateRect(KeyData.hWndMain,NULL,FALSE);
+  InvalidateRect(sKeyData.hWndMain,NULL,FALSE);
   EndDialog(hDlg,TRUE);
  }
 }
-void SHOWTEXTUREFORM::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void SHOWSTextureCWnd_Form::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  RECT Rect;
  PAINTSTRUCT ps;
  HDC hdc;
  hdc=BeginPaint(hDlg,&ps);
  unsigned char TextureMap[256*256*3];
- int tms=KeyData.TextureMap[TextureNo].Size;
+ int tms=sKeyData.TextureMap[TextureNo].Size;
  for(int tx=0;tx<256;tx++)
  for(int ty=0;ty<256;ty++)
  {
@@ -93,9 +93,9 @@ void SHOWTEXTUREFORM::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
   if (tx+hPos<tms && ty+vPos<tms)
   {
    int offset1=(tx+hPos)*tms+(ty+vPos);
-   R=KeyData.TextureMap[TextureNo].R[offset1];
-   G=KeyData.TextureMap[TextureNo].G[offset1];
-   B=KeyData.TextureMap[TextureNo].B[offset1];
+   R=sKeyData.TextureMap[TextureNo].R[offset1];
+   G=sKeyData.TextureMap[TextureNo].G[offset1];
+   B=sKeyData.TextureMap[TextureNo].B[offset1];
   }
   TextureMap[offset]=B;
   TextureMap[offset+1]=G;
@@ -129,7 +129,7 @@ void SHOWTEXTUREFORM::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  StretchDIBits(hdc,Rect.left,Rect.top,Rect.right-Rect.left,Rect.bottom-Rect.top,0,0,256,256,TextureMap,&info,DIB_RGB_COLORS,SRCCOPY);
  EndPaint(hDlg,&ps);
 }
-void SHOWTEXTUREFORM::HScroll(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void SHOWSTextureCWnd_Form::HScroll(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  int move=0;
  int msg=LOWORD(wParam);
@@ -166,7 +166,7 @@ void SHOWTEXTUREFORM::HScroll(HWND hDlgs,WPARAM wParam,LPARAM lParam)
   InvalidateRect(hDlg,NULL,FALSE);
  }
 }
-void SHOWTEXTUREFORM::VScroll(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void SHOWSTextureCWnd_Form::VScroll(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  int move=0;
  int msg=LOWORD(wParam);
@@ -204,11 +204,11 @@ void SHOWTEXTUREFORM::VScroll(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  }
 }
 //------------------------------------------------------------------------------
-void SHOWTEXTUREFORM::Activate(int texture,HWND hWnd)
+void SHOWSTextureCWnd_Form::Activate(int texture,HWND hWnd)
 {
  TextureNo=texture;
- EnableWindow(KeyData.hWndMenu,FALSE);
+ EnableWindow(sKeyData.hWndMenu,FALSE);
  DialogBox(hProjectInstance,(LPSTR)14,hWnd,(DLGPROC)SHOWTEXTUREFORM_dlgProc);
- EnableWindow(KeyData.hWndMenu,TRUE);
+ EnableWindow(sKeyData.hWndMenu,TRUE);
 }
  

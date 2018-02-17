@@ -1,15 +1,15 @@
 #include "dl_createlightingform.h"
 
-extern KEY_DATA KeyData;//ключевая информация
+extern SKeyData sKeyData;//ключевая информация
 extern HINSTANCE hProjectInstance;
-extern MENUFORM MenuForm;
+extern CWnd_Menu cWnd_Menu;
 
-CREATELIGHTINGFORM CreateLightingForm;
+CDialog_CreateLighting cDialog_CreateLighting;
 
 //------------------------------------------------------------------------------
-CREATELIGHTINGFORM::CREATELIGHTINGFORM(void)
+CDialog_CreateLighting::CDialog_CreateLighting(void)
 {
- CreateLightingForm.Initialize();
+ cDialog_CreateLighting.Initialize();
 }
 LONG WINAPI CREATELIGHTINGFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lParam)
 {
@@ -17,24 +17,24 @@ LONG WINAPI CREATELIGHTINGFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM l
  {
   case WM_INITDIALOG:
   {
-   CreateLightingForm.InitDialog(hDlg,wParam,lParam);
+   cDialog_CreateLighting.InitDialog(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_COMMAND:
   {
-   CreateLightingForm.Command(hDlg,wParam,lParam);
+   cDialog_CreateLighting.Command(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_PAINT:
   {
-   CreateLightingForm.Paint(hDlg,wParam,lParam);
+   cDialog_CreateLighting.Paint(hDlg,wParam,lParam);
    return(TRUE);
   }
  }
  return(FALSE);
 }
 //------------------------------------------------------------------------------
-void CREATELIGHTINGFORM::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void CDialog_CreateLighting::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  hDlg=hDlgs;
  hEdit_Height=GetDlgItem(hDlg,CREATELIGHTINGFORM_EDIT_HEIGHT);
@@ -84,12 +84,12 @@ void CREATELIGHTINGFORM::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  if (WorkingLighting.Mode==4) SendMessage(hRadioButton_Mode4,BM_SETCHECK,1,0) ; 
  ColorSet.Create(CC_ANYCOLOR|CC_FULLOPEN,hDlg,hProjectInstance);
 }
-void CREATELIGHTINGFORM::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void CDialog_CreateLighting::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  int id=LOWORD(wParam);
  if (id==CREATELIGHTINGFORM_BUTTON_CANCEL)
  {
-  InvalidateRect(KeyData.hWndMain,NULL,FALSE);
+  InvalidateRect(sKeyData.hWndMain,NULL,FALSE);
   EndDialog(hDlg,TRUE);
  }
  if (id==CREATELIGHTINGFORM_BUTTON_CREATE)
@@ -124,15 +124,15 @@ void CREATELIGHTINGFORM::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
   Lighting[SelectLighting]=WorkingLighting;
   if (Flag==0)//если мы создаём новый источник света
   {
-   KeyData.MaximumNumberOfLighting++;
-   MenuForm.UpDate();
+   sKeyData.MaximumNumberOfLighting++;
+   cWnd_Menu.UpDate();
   }
-  InvalidateRect(KeyData.hWndMain,NULL,FALSE);
+  InvalidateRect(sKeyData.hWndMain,NULL,FALSE);
   EndDialog(hDlg,TRUE);
  }
  if (id==CREATELIGHTINGFORM_BUTTON_SETCOLOR) SetColor();
 }
-void CREATELIGHTINGFORM::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void CDialog_CreateLighting::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  PAINTSTRUCT ps;
  HDC hdc;
@@ -157,7 +157,7 @@ void CREATELIGHTINGFORM::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  EndPaint(hDlg,&ps);
 }
 //------------------------------------------------------------------------------
-void CREATELIGHTINGFORM::Initialize(void)
+void CDialog_CreateLighting::Initialize(void)
 {
  WorkingLighting.Z=0;
  WorkingLighting.X=0;
@@ -177,34 +177,34 @@ void CREATELIGHTINGFORM::Initialize(void)
  WorkingLighting.Mode4_OnTime=0;
  WorkingLighting.TimeInterval=0;
 }
-void CREATELIGHTINGFORM::CreateNewLighting(int x,int y)
+void CDialog_CreateLighting::CreateNewLighting(int x,int y)
 {
  Flag=0;
  WorkingLighting.X=x;
  WorkingLighting.Y=y;
- SelectLighting=KeyData.MaximumNumberOfLighting;
- EnableWindow(KeyData.hWndMenu,FALSE);
- DialogBox(hProjectInstance,(LPSTR)10,KeyData.hWndMain,(DLGPROC)CREATELIGHTINGFORM_dlgProc);
- EnableWindow(KeyData.hWndMenu,TRUE);
+ SelectLighting=sKeyData.MaximumNumberOfLighting;
+ EnableWindow(sKeyData.hWndMenu,FALSE);
+ DialogBox(hProjectInstance,(LPSTR)10,sKeyData.hWndMain,(DLGPROC)CREATELIGHTINGFORM_dlgProc);
+ EnableWindow(sKeyData.hWndMenu,TRUE);
 }
-void CREATELIGHTINGFORM::ModifycationLighting(int lighting)
+void CDialog_CreateLighting::ModifycationLighting(int lighting)
 {
  if (lighting==-1) return;
  Flag=1;
  WorkingLighting=Lighting[lighting];
  SelectLighting=lighting;
- EnableWindow(KeyData.hWndMenu,FALSE);
- DialogBox(hProjectInstance,(LPSTR)11,KeyData.hWndMain,(DLGPROC)CREATELIGHTINGFORM_dlgProc);
- EnableWindow(KeyData.hWndMenu,TRUE);
+ EnableWindow(sKeyData.hWndMenu,FALSE);
+ DialogBox(hProjectInstance,(LPSTR)11,sKeyData.hWndMain,(DLGPROC)CREATELIGHTINGFORM_dlgProc);
+ EnableWindow(sKeyData.hWndMenu,TRUE);
 }
-void CREATELIGHTINGFORM::DeleteLighting(void)
+void CDialog_CreateLighting::DeleteLighting(void)
 {
- if (KeyData.SelectLighting==-1) return;
- for(int n=KeyData.SelectLighting+1;n<KeyData.MaximumNumberOfLighting;n++) Lighting[n-1]=Lighting[n];
- KeyData.MaximumNumberOfLighting--;
- KeyData.SelectLighting=-1;
+ if (sKeyData.SelectLighting==-1) return;
+ for(int n=sKeyData.SelectLighting+1;n<sKeyData.MaximumNumberOfLighting;n++) Lighting[n-1]=Lighting[n];
+ sKeyData.MaximumNumberOfLighting--;
+ sKeyData.SelectLighting=-1;
 }
-void CREATELIGHTINGFORM::SetColor(void)
+void CDialog_CreateLighting::SetColor(void)
 {
  unsigned char r,g,b;
  if (ColorSet.Activate(&r,&g,&b))
@@ -215,13 +215,13 @@ void CREATELIGHTINGFORM::SetColor(void)
   InvalidateRect(hDlg,NULL,FALSE);
  }
 }
-void CREATELIGHTINGFORM::SaveLighting(FILE *File)
+void CDialog_CreateLighting::SaveLighting(FILE *File)
 {
  char string[255];
- itoa(KeyData.MaximumNumberOfLighting,string,10);
- fprintf(File,"LIGHTING STRUCTURE\n");
+ itoa(sKeyData.MaximumNumberOfLighting,string,10);
+ fprintf(File,"SLighting STRUCTURE\n");
  fprintf(File,"MAXIMUM %s\n",string);
- for(int n=0;n<KeyData.MaximumNumberOfLighting;n++)
+ for(int n=0;n<sKeyData.MaximumNumberOfLighting;n++)
  {
   fprintf(File,"%i ",Lighting[n].X);
   fprintf(File,"%i ",Lighting[n].Y);
@@ -258,12 +258,12 @@ void CREATELIGHTINGFORM::SaveLighting(FILE *File)
  fprintf(File,"%f ",WorkingLighting.Mode4_OffTime);
  fprintf(File,"%f \n",WorkingLighting.Mode4_OnTime);
 }
-void CREATELIGHTINGFORM::LoadLighting(FILE *File)
+void CDialog_CreateLighting::LoadLighting(FILE *File)
 {
- if (GetReadPos(File,"LIGHTING STRUCTURE")==0) return;
+ if (GetReadPos(File,"SLighting STRUCTURE")==0) return;
  GetReadPos(File,"MAXIMUM");
- KeyData.MaximumNumberOfLighting=(int)ReadNumber(File);
- for(int n=0;n<KeyData.MaximumNumberOfLighting;n++)
+ sKeyData.MaximumNumberOfLighting=(int)ReadNumber(File);
+ for(int n=0;n<sKeyData.MaximumNumberOfLighting;n++)
  {
   Lighting[n].X=(int)ReadNumber(File);
   Lighting[n].Y=(int)ReadNumber(File);
@@ -300,19 +300,19 @@ void CREATELIGHTINGFORM::LoadLighting(FILE *File)
  WorkingLighting.Mode4_OffTime=ReadNumber(File);
  WorkingLighting.Mode4_OnTime=ReadNumber(File);
 }
-void CREATELIGHTINGFORM::DrawAllLighting(int xLeftMap,int yTopMap)
+void CDialog_CreateLighting::DrawAllLighting(int xLeftMap,int yTopMap)
 {
- for(int n=0;n<KeyData.MaximumNumberOfLighting;n++)
+ for(int n=0;n<sKeyData.MaximumNumberOfLighting;n++)
  {
   Circle((Lighting[n].X-xLeftMap)*10,(Lighting[n].Y-yTopMap)*10,8,Lighting[n].R,Lighting[n].G,Lighting[n].B);
-  if (KeyData.SelectLighting==n) Circle((Lighting[n].X-xLeftMap)*10,(Lighting[n].Y-yTopMap)*10,5,255-Lighting[n].R,255-Lighting[n].G,255-Lighting[n].B);//выделенный источник света
+  if (sKeyData.SelectLighting==n) Circle((Lighting[n].X-xLeftMap)*10,(Lighting[n].Y-yTopMap)*10,5,255-Lighting[n].R,255-Lighting[n].G,255-Lighting[n].B);//выделенный источник света
  }
 }
-int CREATELIGHTINGFORM::GetLightingInScreen(int x,int y)
+int CDialog_CreateLighting::GetLightingInScreen(int x,int y)
 {
  int selected=-1;
  float minlen=1000000000.0;
- for(int n=0;n<KeyData.MaximumNumberOfLighting;n++)
+ for(int n=0;n<sKeyData.MaximumNumberOfLighting;n++)
  {
   float xl=(float)(Lighting[n].X*10.0);
   float yl=(float)(Lighting[n].Y*10.0);
@@ -326,7 +326,7 @@ int CREATELIGHTINGFORM::GetLightingInScreen(int x,int y)
  }
  return(selected); 
 }
-void CREATELIGHTINGFORM::SaveLightingFromRender(FILE *File,int lighting)
+void CDialog_CreateLighting::SaveLightingFromRender(FILE *File,int lighting)
 {
  SaveFloat(File,(float)(-Lighting[lighting].X*16.0));
  SaveFloat(File,(float)(Lighting[lighting].Z));

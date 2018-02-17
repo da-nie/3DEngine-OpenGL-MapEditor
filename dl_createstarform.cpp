@@ -1,13 +1,13 @@
 #include "dl_createstarform.h"
 
-extern KEY_DATA KeyData;//ключевая информация
-extern CREATESEGMENTFORM CreateSegmentForm;
+extern SKeyData sKeyData;//ключевая информация
+extern CDialog_CreateSegment cDialog_CreateSegment;
 
-CREATESTARFORM CreateStarForm;
+CDialog_CreateStar cDialog_CreateStar;
 //------------------------------------------------------------------------------
-CREATESTARFORM::CREATESTARFORM(void)
+CDialog_CreateStar::CDialog_CreateStar(void)
 {
- CreateStarForm.Initialize();
+ cDialog_CreateStar.Initialize();
 }
  
 LONG WINAPI CREATESTARFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lParam)
@@ -16,19 +16,19 @@ LONG WINAPI CREATESTARFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lPara
  {
   case WM_INITDIALOG:
   {
-   CreateStarForm.InitDialog(hDlg,wParam,lParam);
+   cDialog_CreateStar.InitDialog(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_COMMAND:
   {
-   CreateStarForm.Command(hDlg,wParam,lParam);
+   cDialog_CreateStar.Command(hDlg,wParam,lParam);
    return(TRUE);
   }
  }
  return(FALSE);
 }
 //------------------------------------------------------------------------------
-void CREATESTARFORM::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void CDialog_CreateStar::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  hDlg=hDlgs;
  hEdit_RadiusUp=GetDlgItem(hDlg,CREATESTARFORM_EDIT_RADIUSUP);
@@ -47,12 +47,12 @@ void CREATESTARFORM::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  itoa(Angle,string,10);
  SetWindowText(hEdit_Angle,string);
 }
-void CREATESTARFORM::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void CDialog_CreateStar::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  int id=LOWORD(wParam);
  if (id==CREATESTARFORM_BUTTON_CANCEL)
  {
-  InvalidateRect(KeyData.hWndMain,NULL,FALSE);
+  InvalidateRect(sKeyData.hWndMain,NULL,FALSE);
   EndDialog(hDlg,TRUE);
  }
  if (id==CREATESTARFORM_BUTTON_CREATE)
@@ -81,55 +81,55 @@ void CREATESTARFORM::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
    if (x2>100000 || y2>100000) continue;
    if (x1>=0 && x1<=100000 && y1>=0 && y1<=100000)
    {
-    KeyData.MaximumPset=2;
-    KeyData.X[0]=(int)(x1);
-    KeyData.Y[0]=(int)(y1);
-    KeyData.X[1]=(int)(x2);
-    KeyData.Y[1]=(int)(y2);
+    sKeyData.MaximumPset=2;
+    sKeyData.X[0]=(int)(x1);
+    sKeyData.Y[0]=(int)(y1);
+    sKeyData.X[1]=(int)(x2);
+    sKeyData.Y[1]=(int)(y2);
     if (SendMessage(hCheckBox_Vector,BM_GETCHECK,0,0)==0)
     {
-     KeyData.X[0]=(int)(x2);
-     KeyData.Y[0]=(int)(y2);
-     KeyData.X[1]=(int)(x1);
-     KeyData.Y[1]=(int)(y1);
+     sKeyData.X[0]=(int)(x2);
+     sKeyData.Y[0]=(int)(y2);
+     sKeyData.X[1]=(int)(x1);
+     sKeyData.Y[1]=(int)(y1);
     }
-    CreateSegmentForm.CreateSegment(0);
+    cDialog_CreateSegment.CreateSegment(0);
    }
    if (x1_1>=0 && x1_1<=100000 && y1_1>=0 && y1_1<=100000)
    {
-    KeyData.MaximumPset=2;
-    KeyData.X[0]=(int)(x2);
-    KeyData.Y[0]=(int)(y2);
-    KeyData.X[1]=(int)(x1_1);
-    KeyData.Y[1]=(int)(y1_1);
+    sKeyData.MaximumPset=2;
+    sKeyData.X[0]=(int)(x2);
+    sKeyData.Y[0]=(int)(y2);
+    sKeyData.X[1]=(int)(x1_1);
+    sKeyData.Y[1]=(int)(y1_1);
     if (SendMessage(hCheckBox_Vector,BM_GETCHECK,0,0)==0)
     {
-     KeyData.X[0]=(int)(x1_1);
-     KeyData.Y[0]=(int)(y1_1);
-     KeyData.X[1]=(int)(x2);
-     KeyData.Y[1]=(int)(y2);
+     sKeyData.X[0]=(int)(x1_1);
+     sKeyData.Y[0]=(int)(y1_1);
+     sKeyData.X[1]=(int)(x2);
+     sKeyData.Y[1]=(int)(y2);
     }
-    CreateSegmentForm.CreateSegment(0);
+    cDialog_CreateSegment.CreateSegment(0);
    }
   }
-  InvalidateRect(KeyData.hWndMain,NULL,FALSE);
+  InvalidateRect(sKeyData.hWndMain,NULL,FALSE);
   EndDialog(hDlg,TRUE);
  }
 }
 //------------------------------------------------------------------------------
-void CREATESTARFORM::Initialize(void)
+void CDialog_CreateStar::Initialize(void)
 {
  Angle=0;
  RadiusUp=0;
  RadiusDown=0;
  Vertex=0;
 }
-void CREATESTARFORM::Activate(int x,int y)
+void CDialog_CreateStar::Activate(int x,int y)
 {
  X_Pos=x;
  Y_Pos=y;
- EnableWindow(KeyData.hWndMenu,FALSE);
- DialogBox(hProjectInstance,(LPSTR)8,KeyData.hWndMain,(DLGPROC)CREATESTARFORM_dlgProc);
- EnableWindow(KeyData.hWndMenu,TRUE);
+ EnableWindow(sKeyData.hWndMenu,FALSE);
+ DialogBox(hProjectInstance,(LPSTR)8,sKeyData.hWndMain,(DLGPROC)CREATESTARFORM_dlgProc);
+ EnableWindow(sKeyData.hWndMenu,TRUE);
 }
  

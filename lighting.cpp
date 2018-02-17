@@ -1,22 +1,22 @@
 #include "lighting.h"
 
-extern CREATELIGHTINGFORM CreateLightingForm;
-extern SETUP SetUp;//настройки редактора
+extern CDialog_CreateLighting cDialog_CreateLighting;
+extern SSettings sSettings;//настройки редактора
 
 //------------------------------------------------------------------------------
-LIGHT::LIGHT(SURFACE *SurfacePointer,int AllSurfaceNumber)
+CLight::CLight(SSurface *SurfacePointer,int AllSurfaceNumber)
 {
  Surface=SurfacePointer;
  AllSurface=AllSurfaceNumber;
  //сразу же выделим память под массив данных сферы затенения
  for(int n=0;n<8;n++) SphereFromLight[n]=new int[AllSurface+1];
 }
-LIGHT::~LIGHT(void)
+CLight::~CLight(void)
 {
  for(int n=0;n<8;n++) delete(SphereFromLight[n]);
 }
 //------------------------------------------------------------------------------
-void LIGHT::SetCurrentSurface(int sfc,int segment,int sector,int sectortype,CPolygon *cPolygon_Stage)
+void CLight::SetCurrentSurface(int sfc,int segment,int sector,int sectortype,CPolygon *cPolygon_Stage)
 {
  int n,m,k,l,u;
  CurrentSurface=sfc;
@@ -37,20 +37,20 @@ void LIGHT::SetCurrentSurface(int sfc,int segment,int sector,int sectortype,CPol
   zc/=Surface[sfc].Vertex;
  }
  //определим источники света, максимальным образом влияющие на эту поверхность
- double C_A=SetUp.Constant_Attenuation;
- double L_A=SetUp.Linear_Attenuation;
- double Q_A=SetUp.Quadric_Attenuation;
+ double C_A=sSettings.Constant_Attenuation;
+ double L_A=sSettings.Linear_Attenuation;
+ double Q_A=sSettings.Quadric_Attenuation;
   
   
- int *light_array=new int[KeyData.MaximumNumberOfLighting+1];
- float *light_maxforce=new float[KeyData.MaximumNumberOfLighting+1];
+ int *light_array=new int[sKeyData.MaximumNumberOfLighting+1];
+ float *light_maxforce=new float[sKeyData.MaximumNumberOfLighting+1];
  int EnabledLightingAmount=0;
- for(n=0;n<KeyData.MaximumNumberOfLighting;n++)
+ for(n=0;n<sKeyData.MaximumNumberOfLighting;n++)
  {
   SPoint sPoint_Light;
-  sPoint_Light.X=CreateLightingForm.Lighting[n].X*16.0;
-  sPoint_Light.Y=CreateLightingForm.Lighting[n].Y*16.0;
-  sPoint_Light.Z=CreateLightingForm.Lighting[n].Z;
+  sPoint_Light.X=cDialog_CreateLighting.Lighting[n].X*16.0;
+  sPoint_Light.Y=cDialog_CreateLighting.Lighting[n].Y*16.0;
+  sPoint_Light.Z=cDialog_CreateLighting.Lighting[n].Z;
   BOOL LightEnable=TRUE;
   //посмотрим, может быть этот источник вообще не освещает поверхность
   //нет ли такого полигона, который сразу закрывает поверхность ? (это ускорит рендеринг)
@@ -145,9 +145,9 @@ void LIGHT::SetCurrentSurface(int sfc,int segment,int sector,int sectortype,CPol
    double x=Surface[CurrentSurface].X[m];
    double y=Surface[CurrentSurface].Y[m];
    double z=Surface[CurrentSurface].Z[m];
-   double lx=CreateLightingForm.Lighting[n].X*16.0-x;
-   double ly=CreateLightingForm.Lighting[n].Y*16.0-y;
-   double lz=CreateLightingForm.Lighting[n].Z-z;
+   double lx=cDialog_CreateLighting.Lighting[n].X*16.0-x;
+   double ly=cDialog_CreateLighting.Lighting[n].Y*16.0-y;
+   double lz=cDialog_CreateLighting.Lighting[n].Z-z;
    double dist=sqrt(lx*lx+ly*ly+lz*lz);//дистанция между источником и точкой поверхности
    if (dist!=0)
    {
@@ -166,9 +166,9 @@ void LIGHT::SetCurrentSurface(int sfc,int segment,int sector,int sectortype,CPol
    }
    normalproduct=fabs(normalproduct);
    double d=normalproduct/(C_A+L_A*dist+Q_A*dist*dist);
-   float rf=(float)(d*CreateLightingForm.Lighting[n].R);
-   float gf=(float)(d*CreateLightingForm.Lighting[n].G);
-   float bf=(float)(d*CreateLightingForm.Lighting[n].B);
+   float rf=(float)(d*cDialog_CreateLighting.Lighting[n].R);
+   float gf=(float)(d*cDialog_CreateLighting.Lighting[n].G);
+   float bf=(float)(d*cDialog_CreateLighting.Lighting[n].B);
    float light_force=rf+gf+bf;
    if (light_maxforce[EnabledLightingAmount]<light_force) light_maxforce[EnabledLightingAmount]=light_force;
   }
@@ -196,9 +196,9 @@ void LIGHT::SetCurrentSurface(int sfc,int segment,int sector,int sectortype,CPol
   if ((light_maxforce[n]/765.0)<0.02) break;
   int lighting=light_array[n];
   LightingNumber[LightingAmount]=lighting;
-  sPoint_Lighting[LightingAmount].X=CreateLightingForm.Lighting[lighting].X*16.0;
-  sPoint_Lighting[LightingAmount].Y=CreateLightingForm.Lighting[lighting].Y*16.0;
-  sPoint_Lighting[LightingAmount].Z=CreateLightingForm.Lighting[lighting].Z;
+  sPoint_Lighting[LightingAmount].X=cDialog_CreateLighting.Lighting[lighting].X*16.0;
+  sPoint_Lighting[LightingAmount].Y=cDialog_CreateLighting.Lighting[lighting].Y*16.0;
+  sPoint_Lighting[LightingAmount].Z=cDialog_CreateLighting.Lighting[lighting].Z;
   LightingAmount++;
  }
  delete(light_array);
@@ -331,7 +331,7 @@ void LIGHT::SetCurrentSurface(int sfc,int segment,int sector,int sectortype,CPol
  delete(tpos);
  delete(tNormal);
 }
-void LIGHT::SetShadowSurface(int sfc,double xc,double yc,double zc,int lightingnumber)
+void CLight::SetShadowSurface(int sfc,double xc,double yc,double zc,int lightingnumber)
 {
  int m,k,l;
  //создадим набор плоскостей для определения попавших в область затенения поверхностей

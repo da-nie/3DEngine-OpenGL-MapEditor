@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 LONG WINAPI CREATESTARFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lParam);
 //------------------------------------------------------------------------------
-class CREATESTARFORM
+class CDialog_CreateStar
 {
  public:
   //-----------------------------------------------------------
@@ -27,7 +27,7 @@ class CREATESTARFORM
   int X_Pos;
   int Y_Pos;
   //-----------------------------------------------------------
-  CREATESTARFORM(void);
+  CDialog_CreateStar(void);
   //-----------------------------------------------------------
   void InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam);
   void Command(HWND hDlgs,WPARAM wParam,LPARAM lParam);

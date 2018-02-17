@@ -1,5 +1,5 @@
-#ifndef DL_SETTEXTUREFOLLOW_H
-#define DL_SETTEXTUREFOLLOW_H
+#ifndef DL_SETSTextureFollow_H
+#define DL_SETSTextureFollow_H
 
 #include <windows.h>
 #include <conio.h>
@@ -11,10 +11,10 @@
 #include "button.h"
 
 //------------------------------------------------------------------------------
-struct TEXTUREFOLLOW
+struct STextureFollow
 {
  int MaximumTexture;
- TEXTURE TextureList[100];
+ STexture TextureList[100];
  int Mode;
  int ScrollLToR;//-1-обратное направление
  int ScrollUToD;//-1-обратное направление
@@ -24,7 +24,7 @@ struct TEXTUREFOLLOW
 //------------------------------------------------------------------------------
 LONG WINAPI SETTEXTUREFOLLOWFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lParam);
 //------------------------------------------------------------------------------
-class SETTEXTUREFOLLOWFORM
+class SETSTextureFollowCWnd_Form
 {
  public:
   //-----------------------------------------------------------
@@ -41,8 +41,8 @@ class SETTEXTUREFOLLOWFORM
   HWND hEdit_SpeedSLToR;
   HWND hEdit_SpeedSUToD;
   //-----------------------------------------------------------
-  TEXTUREFOLLOW TextureFollow;
-  TEXTUREFOLLOW OldTextureFollow;
+  STextureFollow TextureFollow;
+  STextureFollow OldTextureFollow;
   int hPos;//позиция бегунка
   //-----------------------------------------------------------
   void InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam);
@@ -50,12 +50,12 @@ class SETTEXTUREFOLLOWFORM
   void HScroll(HWND hDlgs,WPARAM wParam,LPARAM lParam);
   void Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam);
   //-----------------------------------------------------------
-  void SaveForRender(TEXTUREFOLLOW texturefollow,FILE *File);
-  void Save(TEXTUREFOLLOW texturefollow,FILE *File);
-  void Load(TEXTUREFOLLOW *texturefollow,FILE *File);
-  void InitializeTextureFollow(TEXTUREFOLLOW *texturefollow);
+  void SaveForRender(STextureFollow texturefollow,FILE *File);
+  void Save(STextureFollow texturefollow,FILE *File);
+  void Load(STextureFollow *texturefollow,FILE *File);
+  void InitializeTextureFollow(STextureFollow *texturefollow);
   //-----------------------------------------------------------
-  TEXTUREFOLLOW Activate(HWND hWnd,TEXTUREFOLLOW texturefollow);//запуск диалога
+  STextureFollow Activate(HWND hWnd,STextureFollow texturefollow);//запуск диалога
 };
 
 #endif

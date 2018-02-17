@@ -12,7 +12,7 @@
 //------------------------------------------------------------------------------
 LONG WINAPI STARTPOSFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lParam);
 //------------------------------------------------------------------------------
-class STARTPOSFORM
+class CDialog_StartPos
 {
  public:
   //-----------------------------------------------------------
@@ -26,7 +26,7 @@ class STARTPOSFORM
   int Working_X_Pos;
   int Working_Y_Pos;
   //-----------------------------------------------------------
-  STARTPOSFORM(void);
+  CDialog_StartPos(void);
   //-----------------------------------------------------------
   void InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam);
   void Command(HWND hDlgs,WPARAM wParam,LPARAM lParam);

@@ -1,11 +1,11 @@
 #include "dl_settingrenderform.h"
 
-extern SETUP SetUp;//настройки редактора
-extern KEY_DATA KeyData;//ключевая информация
+extern SSettings sSettings;//настройки редактора
+extern SKeyData sKeyData;//ключевая информация
 extern HINSTANCE hProjectInstance;
 
 
-SETTINGRENDERFORM SettingRenderForm;
+CDialog_SettingsRender cDialog_SettingsRender;
 //------------------------------------------------------------------------------
 LONG WINAPI SETTINGRENDERFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lParam)
 {
@@ -13,24 +13,24 @@ LONG WINAPI SETTINGRENDERFORM_dlgProc(HWND hDlg,UINT msg,WPARAM wParam,LPARAM lP
  {
   case WM_INITDIALOG:
   {
-   SettingRenderForm.InitDialog(hDlg,wParam,lParam);
+   cDialog_SettingsRender.InitDialog(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_COMMAND:
   {
-   SettingRenderForm.Command(hDlg,wParam,lParam);
+   cDialog_SettingsRender.Command(hDlg,wParam,lParam);
    return(TRUE);
   }
   case WM_PAINT:
   {
-   SettingRenderForm.Paint(hDlg,wParam,lParam);
+   cDialog_SettingsRender.Paint(hDlg,wParam,lParam);
    return(TRUE);
   }
  }
  return(FALSE);
 }
 //------------------------------------------------------------------------------
-void SETTINGRENDERFORM::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void CDialog_SettingsRender::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  hDlg=hDlgs;
  hEdit_BlockSize=GetDlgItem(hDlg,SETTINGRENDERFORM_EDIT_BLOCKSIZE);
@@ -40,52 +40,52 @@ void SETTINGRENDERFORM::InitDialog(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  hEdit_FogDensity=GetDlgItem(hDlg,SETTINGRENDERFORM_EDIT_FOGDENSITY);
  hCheckBox_FogEnable=GetDlgItem(hDlg,SETTINGRENDERFORM_CHECKBOX_FOGENABLE);
  char string[255];
- itoa(SetUp.BlockSize,string,10);
+ itoa(sSettings.BlockSize,string,10);
  SetWindowText(hEdit_BlockSize,string);
- sprintf(string,"%g",SetUp.Constant_Attenuation);
+ sprintf(string,"%g",sSettings.Constant_Attenuation);
  SetWindowText(hEdit_Constant,string);
- sprintf(string,"%g",SetUp.Linear_Attenuation);
+ sprintf(string,"%g",sSettings.Linear_Attenuation);
  SetWindowText(hEdit_Linear,string);
- sprintf(string,"%g",SetUp.Quadric_Attenuation);
+ sprintf(string,"%g",sSettings.Quadric_Attenuation);
  SetWindowText(hEdit_Quadric,string);
- itoa(SetUp.Fog_Density,string,10);
+ itoa(sSettings.Fog_Density,string,10);
  SetWindowText(hEdit_FogDensity,string);
  ColorSet.Create(CC_ANYCOLOR|CC_FULLOPEN,hDlg,hProjectInstance);
- A_R=SetUp.R_Ambient;
- A_G=SetUp.G_Ambient;
- A_B=SetUp.B_Ambient;
+ A_R=sSettings.R_Ambient;
+ A_G=sSettings.G_Ambient;
+ A_B=sSettings.B_Ambient;
   
- F_R=SetUp.R_Fog;
- F_G=SetUp.G_Fog;
- F_B=SetUp.B_Fog;
+ F_R=sSettings.R_Fog;
+ F_G=sSettings.G_Fog;
+ F_B=sSettings.B_Fog;
   
- if (SetUp.Fog_Enable==0) SendMessage(hCheckBox_FogEnable,BM_SETCHECK,0,0);
+ if (sSettings.Fog_Enable==0) SendMessage(hCheckBox_FogEnable,BM_SETCHECK,0,0);
  else SendMessage(hCheckBox_FogEnable,BM_SETCHECK,1,0);
 }
-void SETTINGRENDERFORM::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void CDialog_SettingsRender::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  int id=LOWORD(wParam);
  if (id==SETTINGRENDERFORM_BUTTON_CREATE)
  {
   char string[255];
   GetWindowText(hEdit_BlockSize,string,255);
-  SetUp.BlockSize=atoi(string);
+  sSettings.BlockSize=atoi(string);
   GetWindowText(hEdit_Constant,string,255);
-  SetUp.Constant_Attenuation=atof(string);
+  sSettings.Constant_Attenuation=atof(string);
   GetWindowText(hEdit_Linear,string,255);
-  SetUp.Linear_Attenuation=atof(string);
+  sSettings.Linear_Attenuation=atof(string);
   GetWindowText(hEdit_Quadric,string,255);
-  SetUp.Quadric_Attenuation=atof(string);
+  sSettings.Quadric_Attenuation=atof(string);
   GetWindowText(hEdit_FogDensity,string,255);
-  SetUp.Fog_Density=atoi(string);
-  if (SendMessage(hCheckBox_FogEnable,BM_GETCHECK,0,0)==1) SetUp.Fog_Enable=1;
-  else SetUp.Fog_Enable=0;
-  SetUp.R_Ambient=A_R;
-  SetUp.G_Ambient=A_G;
-  SetUp.B_Ambient=A_B;
-  SetUp.R_Fog=F_R;
-  SetUp.G_Fog=F_G;
-  SetUp.B_Fog=F_B;
+  sSettings.Fog_Density=atoi(string);
+  if (SendMessage(hCheckBox_FogEnable,BM_GETCHECK,0,0)==1) sSettings.Fog_Enable=1;
+  else sSettings.Fog_Enable=0;
+  sSettings.R_Ambient=A_R;
+  sSettings.G_Ambient=A_G;
+  sSettings.B_Ambient=A_B;
+  sSettings.R_Fog=F_R;
+  sSettings.G_Fog=F_G;
+  sSettings.B_Fog=F_B;
   EndDialog(hDlg,TRUE);
  }
  if (id==SETTINGRENDERFORM_BUTTON_CANCEL)
@@ -125,7 +125,7 @@ void SETTINGRENDERFORM::Command(HWND hDlgs,WPARAM wParam,LPARAM lParam)
   InvalidateRect(hDlg,NULL,FALSE);
  }
 }
-void SETTINGRENDERFORM::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
+void CDialog_SettingsRender::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
 {
  int x,y;
  unsigned char ColorMap[40*40*3];
@@ -184,10 +184,10 @@ void SETTINGRENDERFORM::Paint(HWND hDlgs,WPARAM wParam,LPARAM lParam)
  EndPaint(hDlg,&ps);
 }
 //------------------------------------------------------------------------------
-void SETTINGRENDERFORM::Activate(void)
+void CDialog_SettingsRender::Activate(void)
 {
- EnableWindow(KeyData.hWndMenu,FALSE);
- DialogBox(hProjectInstance,(LPSTR)9,KeyData.hWndMain,(DLGPROC)SETTINGRENDERFORM_dlgProc);
- EnableWindow(KeyData.hWndMenu,TRUE);
+ EnableWindow(sKeyData.hWndMenu,FALSE);
+ DialogBox(hProjectInstance,(LPSTR)9,sKeyData.hWndMain,(DLGPROC)SETTINGRENDERFORM_dlgProc);
+ EnableWindow(sKeyData.hWndMenu,TRUE);
 }
  

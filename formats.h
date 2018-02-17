@@ -1,5 +1,5 @@
-#ifndef FORMATS_H
-#define FORMATS_H
+#ifndef CWnd_FormATS_H
+#define CWnd_FormATS_H
  
 #include <stdio.h>
 #include <stdlib.h>

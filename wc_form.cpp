@@ -1,24 +1,24 @@
 #include "wc_form.h"
 
  
-extern SETUP SetUp;//настройки редактора
-extern KEY_DATA KeyData;//ключевая информация
+extern SSettings sSettings;//настройки редактора
+extern SKeyData sKeyData;//ключевая информация
 extern HINSTANCE hProjectInstance;
 
-extern CREATELIGHTINGFORM CreateLightingForm;
-extern CREATESIMPLYSECTORFORM CreateSimplySectorForm;
-extern CREATESIMPLYDOORFORM CreateSimplyDoorForm;
-extern CREATESEGMENTFORM CreateSegmentForm;
-extern STARTPOSFORM StartPosForm;
-extern CREATEPOLYGONFORM CreatePolygonForm;
-extern CREATESTARFORM CreateStarForm;
-extern MENUFORM MenuForm;
-extern PROGRESS Progress;
-extern SETTINGRENDERFORM SettingRenderForm;
+extern CDialog_CreateLighting cDialog_CreateLighting;
+extern CDialog_CreateSimplySector cDialog_CreateSimplySector;
+extern CDialog_CreateSimplyDoor cDialog_CreateSimplyDoor;
+extern CDialog_CreateSegment cDialog_CreateSegment;
+extern CDialog_StartPos StartPoscWnd_Form;
+extern CDialog_CreatePolygon cDialog_CreatePolygon;
+extern CDialog_CreateStar cDialog_CreateStar;
+extern CWnd_Menu cWnd_Menu;
+extern CWnd_Progress cWnd_Progress;
+extern CDialog_SettingsRender cDialog_SettingsRender;
 
 extern unsigned char VideoBuffer[500*500*3];//поле для рисования
 
-FORM Form;
+CWnd_Form cWnd_Form;
 //------------------------------------------------------------------------------
 void FORM_Register(void)
 {
@@ -31,7 +31,7 @@ void FORM_Register(void)
  wc.hCursor=LoadCursor(NULL,IDC_ARROW);
  wc.hbrBackground=(HBRUSH)(COLOR_WINDOW-1);
  wc.lpszMenuName=NULL;
- wc.lpszClassName="Form";
+ wc.lpszClassName="cWnd_Form";
  wc.lpfnWndProc=(WNDPROC)FORM_wndProc;
  RegisterClass(&wc);
 }
@@ -41,70 +41,70 @@ LONG WINAPI FORM_wndProc(HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam)
  {
   case WM_CREATE:
   {
-   Form.Create(hWnd,wParam,lParam);
+   cWnd_Form.Create(hWnd,wParam,lParam);
    return(0);
   }
   case WM_DESTROY:
   {
-   Form.Destroy(hWnd,wParam,lParam);
+   cWnd_Form.Destroy(hWnd,wParam,lParam);
    PostQuitMessage(0);
    return(0);
   }
   case WM_PAINT:
   {
-   Form.Paint(hWnd,wParam,lParam);
+   cWnd_Form.Paint(hWnd,wParam,lParam);
    return(0);
   }
   case WM_RBUTTONDOWN:
   {
-   Form.RButtonDown(hWnd,wParam,lParam);
+   cWnd_Form.RButtonDown(hWnd,wParam,lParam);
    return(0);
   }
   case WM_RBUTTONUP:
   {
-   Form.RButtonUp(hWnd,wParam,lParam);
+   cWnd_Form.RButtonUp(hWnd,wParam,lParam);
    return(0);
   }
   case WM_MOUSEMOVE:
   {
-   Form.MouseMove(hWnd,wParam,lParam);
+   cWnd_Form.MouseMove(hWnd,wParam,lParam);
    return(0);
   }
   case WM_TIMER:
   {
-   Form.Timer(hWnd,wParam,lParam);
+   cWnd_Form.Timer(hWnd,wParam,lParam);
    return(0);
   }
   case WM_LBUTTONUP:
   {
-   Form.LButtonUp(hWnd,wParam,lParam);
+   cWnd_Form.LButtonUp(hWnd,wParam,lParam);
    return(0);
   }
   case WM_COMMAND:
   {
-   Form.Command(hWnd,wParam,lParam);
+   cWnd_Form.Command(hWnd,wParam,lParam);
    return(0);
   }
   case WM_KEYDOWN:
   {
-   Form.KeyDown(hWnd,wParam,lParam);
+   cWnd_Form.KeyDown(hWnd,wParam,lParam);
    return(0);
   }
  }
  return(DefWindowProc(hWnd,msg,wParam,lParam));
 }
 //------------------------------------------------------------------------------
-void FORM::Create(HWND hWnds,WPARAM wParam,LPARAM lParam)
+void CWnd_Form::Create(HWND hWnds,WPARAM wParam,LPARAM lParam)
 {
  hWnd=hWnds;
- KeyData.hWndMain=hWnd;
+ sKeyData.hWndMain=hWnd;
  Initialize();//инициализируем редактор
  LoadTexture("texture.pak");//загружаем текстуры
  HMENU hMainMenu=GetMenu(hWnd);
  hSettingMenu=GetSubMenu(hMainMenu,1);
  FPRS.Create(hWnd);
  FPRS_1.Create(hWnd);
- Static_Form.Create(510,4,280,32,"",WS_BORDER,hWnd,hProjectInstance);
+ Static_cWnd_Form.Create(510,4,280,32,"",WS_BORDER,hWnd,hProjectInstance);
  Static_Text1.Create(520,8,20,24,"X:",0,hWnd,hProjectInstance);
  Static_Text2.Create(540,8,100,24,"0",0,hWnd,hProjectInstance);
  Static_Text3.Create(660,8,20,24,"Y:",0,hWnd,hProjectInstance);
@@ -117,23 +117,23 @@ void FORM::Create(HWND hWnds,WPARAM wParam,LPARAM lParam)
  OldTimer=SetTimer(hWnd,1,1,NULL);
  //создаём панель управления
  HMENU hControlMenu=LoadMenu(hProjectInstance,(LPSTR)IDM_MENU2);
- CreateWindow("MenuForm","Панель управления",WS_VISIBLE|WS_CAPTION|WS_POPUP,525,80,260,390,hWnd,hControlMenu,hProjectInstance,NULL);
+ CreateWindow("cWnd_Menu","Панель управления",WS_VISIBLE|WS_CAPTION|WS_POPUP,525,80,260,390,hWnd,hControlMenu,hProjectInstance,NULL);
 }
-void FORM::Destroy(HWND hWnds,WPARAM wParam,LPARAM lParam)
+void CWnd_Form::Destroy(HWND hWnds,WPARAM wParam,LPARAM lParam)
 {
  KillTimer(hWnd,OldTimer);
- if (KeyData.MaximumTexture>0)
+ if (sKeyData.MaximumTexture>0)
  {
-  for(int n=0;n<KeyData.MaximumTexture;n++)
+  for(int n=0;n<sKeyData.MaximumTexture;n++)
   {
-   delete(KeyData.TextureMap[n].R);
-   delete(KeyData.TextureMap[n].G);
-   delete(KeyData.TextureMap[n].B);
+   delete(sKeyData.TextureMap[n].R);
+   delete(sKeyData.TextureMap[n].G);
+   delete(sKeyData.TextureMap[n].B);
   }
-  delete(KeyData.TextureMap);
+  delete(sKeyData.TextureMap);
  }
 }
-void FORM::Paint(HWND hWnds,WPARAM wParam,LPARAM lParam)
+void CWnd_Form::Paint(HWND hWnds,WPARAM wParam,LPARAM lParam)
 {
  BITMAPINFOHEADER bmih;
  bmih.biSize=sizeof(BITMAPINFOHEADER);
@@ -168,27 +168,27 @@ void FORM::Paint(HWND hWnds,WPARAM wParam,LPARAM lParam)
   else DrawLine(0,y*10,500,y*10,127,127,127);
  }
  //рисуем все имеющиеся источники света
- if (SetUp.ShowLighting==1) CreateLightingForm.DrawAllLighting(xLeftMap,yTopMap);
+ if (sSettings.ShowLighting==1) cDialog_CreateLighting.DrawAllLighting(xLeftMap,yTopMap);
  //рисуем все имеющиеся сектора:
- if (SetUp.ShowSector==1)
+ if (sSettings.ShowSector==1)
  {
   //работа с секторами
   //обычные сектора
-  CreateSimplySectorForm.DrawAllSector(xLeftMap,yTopMap);
+  cDialog_CreateSimplySector.DrawAllSector(xLeftMap,yTopMap);
   //обычные двери
-  CreateSimplyDoorForm.DrawAllSector(xLeftMap,yTopMap);
+  cDialog_CreateSimplyDoor.DrawAllSector(xLeftMap,yTopMap);
   //работа с секторами
  }
  //рисуем все имеющиеся сегменты
- if (SetUp.ShowSegment==1) CreateSegmentForm.DrawAllSegment(xLeftMap,yTopMap);
+ if (sSettings.ShowSegment==1) cDialog_CreateSegment.DrawAllSegment(xLeftMap,yTopMap);
  //рисуем стартовую позицию
- StartPosForm.DrawStartPos(xLeftMap,yTopMap);
+ StartPoscWnd_Form.DrawStartPos(xLeftMap,yTopMap);
  //рисуем текущий создающийся объект (если он есть)
- for(int n=0;n<KeyData.MaximumPset-1;n++)
+ for(int n=0;n<sKeyData.MaximumPset-1;n++)
  {
-  DrawLine((KeyData.X[n]-xLeftMap)*10,(KeyData.Y[n]-yTopMap)*10,(KeyData.X[n+1]-xLeftMap)*10,(KeyData.Y[n+1]-yTopMap)*10,64,255,255);
+  DrawLine((sKeyData.X[n]-xLeftMap)*10,(sKeyData.Y[n]-yTopMap)*10,(sKeyData.X[n+1]-xLeftMap)*10,(sKeyData.Y[n+1]-yTopMap)*10,64,255,255);
  }
- if (KeyData.MaximumPset>0) Button_Reset.Enable();//если есть точки, то кнопка активна, иначе - нет
+ if (sKeyData.MaximumPset>0) Button_Reset.Enable();//если есть точки, то кнопка активна, иначе - нет
  else Button_Reset.Disable();
  //выводим на экран то что нарисовали
  PAINTSTRUCT ps;
@@ -197,7 +197,7 @@ void FORM::Paint(HWND hWnds,WPARAM wParam,LPARAM lParam)
  StretchDIBits(hdc,8,8,500,500,0,0,500,500,VideoBuffer,&info,DIB_RGB_COLORS,SRCCOPY);
  EndPaint(hWnd,&ps);
 }
-void FORM::RButtonDown(HWND hWnds,WPARAM wParam,LPARAM lParam)
+void CWnd_Form::RButtonDown(HWND hWnds,WPARAM wParam,LPARAM lParam)
 {
  if (!(MouseXW>=0 && MouseXW<500 && MouseYW>=0 && MouseYW<500)) return;
  MapMove=1;
@@ -217,7 +217,7 @@ void FORM::RButtonDown(HWND hWnds,WPARAM wParam,LPARAM lParam)
  c_rect.bottom=c_rect.top+500;
  ClipCursor(&c_rect);
 }
-void FORM::RButtonUp(HWND hWnds,WPARAM wParam,LPARAM lParam)
+void CWnd_Form::RButtonUp(HWND hWnds,WPARAM wParam,LPARAM lParam)
 {
  if (MapMove==1)
  {
@@ -226,7 +226,7 @@ void FORM::RButtonUp(HWND hWnds,WPARAM wParam,LPARAM lParam)
   MapMove=0;
  }
 }
-void FORM::MouseMove(HWND hWnds,WPARAM wParam,LPARAM lParam)
+void CWnd_Form::MouseMove(HWND hWnds,WPARAM wParam,LPARAM lParam)
 {
  DWORD xyPos=GetMessagePos();
  POINT Point;
@@ -265,14 +265,14 @@ void FORM::MouseMove(HWND hWnds,WPARAM wParam,LPARAM lParam)
    Static_Text4.SetText(string);
   }
  }
- if (KeyData.MaximumPset>0 && MapMove==0)
+ if (sKeyData.MaximumPset>0 && MapMove==0)
  {
-  KeyData.X[KeyData.MaximumPset-1]=MouseXS;
-  KeyData.Y[KeyData.MaximumPset-1]=MouseYS;
+  sKeyData.X[sKeyData.MaximumPset-1]=MouseXS;
+  sKeyData.Y[sKeyData.MaximumPset-1]=MouseYS;
   InvalidateRect(hWnd,NULL,FALSE);
  }
 }
-void FORM::Timer(HWND hWnds,WPARAM wParam,LPARAM lParam)
+void CWnd_Form::Timer(HWND hWnds,WPARAM wParam,LPARAM lParam)
 {
  if (MapMove==1)
  {
@@ -288,157 +288,157 @@ void FORM::Timer(HWND hWnds,WPARAM wParam,LPARAM lParam)
   if (dx!=0 || dy!=0) InvalidateRect(hWnd,NULL,FALSE);
  }
 }
-void FORM::LButtonUp(HWND hWnds,WPARAM wParam,LPARAM lParam)
+void CWnd_Form::LButtonUp(HWND hWnds,WPARAM wParam,LPARAM lParam)
 {
  //-----------------------------------------------------------------------------
  //РАБОТА С СЕГМЕНТАМИ
  //-----------------------------------------------------------------------------
- if (KeyData.PrimaryMode==1)//создаётся сегмент или линия раздела
+ if (sKeyData.PrimaryMode==1)//создаётся сегмент или линия раздела
  {
-  if (KeyData.MaximumPset==0)//если мы ставим первую точку линии
+  if (sKeyData.MaximumPset==0)//если мы ставим первую точку линии
   {
-   KeyData.X[0]=MouseXS;
-   KeyData.Y[0]=MouseYS;
-   KeyData.X[1]=MouseXS;
-   KeyData.Y[1]=MouseYS;
-   KeyData.MaximumPset=2;
+   sKeyData.X[0]=MouseXS;
+   sKeyData.Y[0]=MouseYS;
+   sKeyData.X[1]=MouseXS;
+   sKeyData.Y[1]=MouseYS;
+   sKeyData.MaximumPset=2;
   }
   else// если мы дорисовали линию, её нужно сохранить
   {
-   if (KeyData.X[0]==KeyData.X[1] && KeyData.Y[0]==KeyData.Y[1])
+   if (sKeyData.X[0]==sKeyData.X[1] && sKeyData.Y[0]==sKeyData.Y[1])
    {
     MessageBox(hWnd,"Сегмент имеет нулевую длину и создан не будет.","Предупреждение",MB_OK);
     return;
    }
-   if (SetUp.ShowSegmentCreateDialog==1)
+   if (sSettings.ShowSegmentCreateDialog==1)
    {
-    if (KeyData.SecondaryMode==0) CreateSegmentForm.CreateNewSegment(0);
-    if (KeyData.SecondaryMode==1) CreateSegmentForm.CreateNewSegment(1);
+    if (sKeyData.SecondaryMode==0) cDialog_CreateSegment.CreateNewSegment(0);
+    if (sKeyData.SecondaryMode==1) cDialog_CreateSegment.CreateNewSegment(1);
    }
    else
    {
-    if (KeyData.SecondaryMode==0) CreateSegmentForm.CreateSegment(0);
-    if (KeyData.SecondaryMode==1) CreateSegmentForm.CreateSegment(1);
+    if (sKeyData.SecondaryMode==0) cDialog_CreateSegment.CreateSegment(0);
+    if (sKeyData.SecondaryMode==1) cDialog_CreateSegment.CreateSegment(1);
    }
   }
  }
  //удаление сегментов
- if (KeyData.PrimaryMode==6)
+ if (sKeyData.PrimaryMode==6)
  {
-  if (KeyData.SecondaryMode==0) GetSelectLine(MouseXW,MouseYW,0);
-  if (KeyData.SecondaryMode==1) GetSelectLine(MouseXW,MouseYW,1);
-  if (KeyData.SecondaryMode==2) GetSelectLine(MouseXW,MouseYW,2);
+  if (sKeyData.SecondaryMode==0) GetSelectLine(MouseXW,MouseYW,0);
+  if (sKeyData.SecondaryMode==1) GetSelectLine(MouseXW,MouseYW,1);
+  if (sKeyData.SecondaryMode==2) GetSelectLine(MouseXW,MouseYW,2);
  }
  //модификация сегмента
- if (KeyData.PrimaryMode==9)
+ if (sKeyData.PrimaryMode==9)
  {
-  if (KeyData.SecondaryMode==0) GetSelectLine(MouseXW,MouseYW,0);
-  if (KeyData.SecondaryMode==1) GetSelectLine(MouseXW,MouseYW,1);
+  if (sKeyData.SecondaryMode==0) GetSelectLine(MouseXW,MouseYW,0);
+  if (sKeyData.SecondaryMode==1) GetSelectLine(MouseXW,MouseYW,1);
  }
  //-----------------------------------------------------------------------------
  //РАБОТА СО СТАНДАРТНЫМИ ФИГУРАМИ
  //-----------------------------------------------------------------------------
- if (KeyData.PrimaryMode==5 && KeyData.SecondaryMode==0)//создание правильного многоугольника
+ if (sKeyData.PrimaryMode==5 && sKeyData.SecondaryMode==0)//создание правильного многоугольника
  {
-  CreatePolygonForm.Activate(MouseXS,MouseYS);
+  cDialog_CreatePolygon.Activate(MouseXS,MouseYS);
  }
- if (KeyData.PrimaryMode==5 && KeyData.SecondaryMode==1)//создание звезды
+ if (sKeyData.PrimaryMode==5 && sKeyData.SecondaryMode==1)//создание звезды
  {
-  CreateStarForm.Activate(MouseXS,MouseYS);
+  cDialog_CreateStar.Activate(MouseXS,MouseYS);
  }
  //-----------------------------------------------------------------------------
  //РАБОТА С ИСТОЧНИКАМИ СВЕТА
  //-----------------------------------------------------------------------------
- if (KeyData.PrimaryMode==3)//создание источника света
+ if (sKeyData.PrimaryMode==3)//создание источника света
  {
-  CreateLightingForm.CreateNewLighting(MouseXS,MouseYS);
+  cDialog_CreateLighting.CreateNewLighting(MouseXS,MouseYS);
  }
- if (KeyData.PrimaryMode==8)//удаление источника света
+ if (sKeyData.PrimaryMode==8)//удаление источника света
  {
   GetSelectLighting(MouseXW,MouseYW);
  }
- if (KeyData.PrimaryMode==11)//модификация источника света
+ if (sKeyData.PrimaryMode==11)//модификация источника света
  {
   GetSelectLighting(MouseXW,MouseYW);
  }
  //-----------------------------------------------------------------------------
  //РАБОТА С СТАРТОВОЙ ПОЗИЦИЕЙ
  //-----------------------------------------------------------------------------
- if (KeyData.PrimaryMode==4)
+ if (sKeyData.PrimaryMode==4)
  {
-  StartPosForm.Activate(MouseXS,MouseYS);
+  StartPoscWnd_Form.Activate(MouseXS,MouseYS);
  }
  //-----------------------------------------------------------------------------
  //РАБОТА С СЕКТОРАМИ
  //-----------------------------------------------------------------------------
- if (KeyData.PrimaryMode==2)//создаётся сектор
+ if (sKeyData.PrimaryMode==2)//создаётся сектор
  {
-  if (KeyData.MaximumPset==0)//если мы ставим первую точку сектора
+  if (sKeyData.MaximumPset==0)//если мы ставим первую точку сектора
   {
-   KeyData.X[0]=MouseXS;
-   KeyData.Y[0]=MouseYS;
-   KeyData.X[1]=MouseXS;
-   KeyData.Y[1]=MouseYS;
-   KeyData.MaximumPset=2;
+   sKeyData.X[0]=MouseXS;
+   sKeyData.Y[0]=MouseYS;
+   sKeyData.X[1]=MouseXS;
+   sKeyData.Y[1]=MouseYS;
+   sKeyData.MaximumPset=2;
   }
   else// если мы ставим не первую точку сектора
   {
-   if (KeyData.X[0]==MouseXS && KeyData.Y[0]==MouseYS)//мы замкнули контур, значит сектор готов
+   if (sKeyData.X[0]==MouseXS && sKeyData.Y[0]==MouseYS)//мы замкнули контур, значит сектор готов
    {
     //проверим сектор на выпуклость
     if (SectorGamber()==0)//сектор не выпуклый
     {
      MessageBox(hWnd,"Сектор не является выпуклым многоугольником !","Ошибка",MB_OK);
-     KeyData.MaximumPset=0;
+     sKeyData.MaximumPset=0;
     }
     else//сектор выпуклый, можно его добавить в набор
     {
      //работа с секторами
-     if (KeyData.SecondaryMode==0) CreateSimplySectorForm.CreateNewSector();
-     if (KeyData.SecondaryMode==1) CreateSimplyDoorForm.CreateNewSector();
+     if (sKeyData.SecondaryMode==0) cDialog_CreateSimplySector.CreateNewSector();
+     if (sKeyData.SecondaryMode==1) cDialog_CreateSimplyDoor.CreateNewSector();
      //работа с секторами
     }
    }
    else//иначе просто добавляем точку
    {
-    if (KeyData.X[KeyData.MaximumPset-2]==MouseXS && KeyData.Y[KeyData.MaximumPset-2]==MouseYS)
+    if (sKeyData.X[sKeyData.MaximumPset-2]==MouseXS && sKeyData.Y[sKeyData.MaximumPset-2]==MouseYS)
     {
      MessageBox(hWnd,"Линия имеет нулевую длину и не будет занесена в список.","Предупреждение",MB_OK);
      return;
     }
-    KeyData.X[KeyData.MaximumPset-1]=MouseXS;
-    KeyData.Y[KeyData.MaximumPset-1]=MouseYS;
-    KeyData.X[KeyData.MaximumPset]=MouseXS;
-    KeyData.Y[KeyData.MaximumPset]=MouseYS;
-    KeyData.MaximumPset++;
+    sKeyData.X[sKeyData.MaximumPset-1]=MouseXS;
+    sKeyData.Y[sKeyData.MaximumPset-1]=MouseYS;
+    sKeyData.X[sKeyData.MaximumPset]=MouseXS;
+    sKeyData.Y[sKeyData.MaximumPset]=MouseYS;
+    sKeyData.MaximumPset++;
    }
   }
  }
  //удаление секторов
- if (KeyData.PrimaryMode==7)
+ if (sKeyData.PrimaryMode==7)
  {
   GetSelectSector(MouseXW,MouseYW);
  }
  //модификация секторов
- if (KeyData.PrimaryMode==10)
+ if (sKeyData.PrimaryMode==10)
  {
   GetSelectSector(MouseXW,MouseYW);
  }
  InvalidateRect(hWnd,NULL,FALSE);
 }
-void FORM::Command(HWND hWnds,WPARAM wParam,LPARAM lParam)
+void CWnd_Form::Command(HWND hWnds,WPARAM wParam,LPARAM lParam)
 {
  int id=LOWORD(wParam);
  if (id==FORM_BUTTON_RESET)
  {
-  KeyData.MaximumPset=0;
+  sKeyData.MaximumPset=0;
   InvalidateRect(hWnd,NULL,FALSE);
  }
  if (id==FORM_BUTTON_EXECUTE_DIALOG)
  {
-  EnableWindow(KeyData.hWndMenu,FALSE);
-  CreateSegmentForm.ChangeParameters();
-  EnableWindow(KeyData.hWndMenu,TRUE);
+  EnableWindow(sKeyData.hWndMenu,FALSE);
+  cDialog_CreateSegment.ChangeParameters();
+  EnableWindow(sKeyData.hWndMenu,TRUE);
  }
  if (id==FORM_MENU_FILE_EXIT)
  {
@@ -447,15 +447,15 @@ void FORM::Command(HWND hWnds,WPARAM wParam,LPARAM lParam)
  }
  if (id==FORM_CHECKBOX_SHOWDIALOG)
  {
-  if (SetUp.ShowSegmentCreateDialog==0)
+  if (sSettings.ShowSegmentCreateDialog==0)
   {
    CheckBox_ShowDialog.SetStateOn();
-   SetUp.ShowSegmentCreateDialog=1;
+   sSettings.ShowSegmentCreateDialog=1;
   }
   else
   {
    CheckBox_ShowDialog.SetStateOff();
-   SetUp.ShowSegmentCreateDialog=0;
+   sSettings.ShowSegmentCreateDialog=0;
   }
  }
  //------------------------------------------------------------------------------
@@ -475,15 +475,15 @@ void FORM::Command(HWND hWnds,WPARAM wParam,LPARAM lParam)
   if (res==IDYES)
   {
    Initialize();
-   CreateLightingForm.Initialize();
-   CreatePolygonForm.Initialize();
-   StartPosForm.Initialize();
-   CreateSegmentForm.Initialize();
+   cDialog_CreateLighting.Initialize();
+   cDialog_CreatePolygon.Initialize();
+   StartPoscWnd_Form.Initialize();
+   cDialog_CreateSegment.Initialize();
    //работа с секторами
-   CreateSimplySectorForm.Initialize();
-   CreateSimplyDoorForm.Initialize();
+   cDialog_CreateSimplySector.Initialize();
+   cDialog_CreateSimplyDoor.Initialize();
    //работа с секторами
-   MenuForm.UpDate();
+   cWnd_Menu.UpDate();
    InvalidateRect(hWnd,NULL,FALSE);
   }
  }
@@ -491,15 +491,15 @@ void FORM::Command(HWND hWnds,WPARAM wParam,LPARAM lParam)
  {
   if (FPRS_1.StartSave("Создание сцены","*.stg\0*.stg\0"))
   {
-   EnableWindow(KeyData.hWndMain,FALSE);
-   EnableWindow(KeyData.hWndMenu,FALSE);
-   Progress.Progress=0;
-   KeyData.hWndProgress=CreateWindow("Progress","Прогресс рендеринга",WS_VISIBLE|WS_OVERLAPPED,CW_USEDEFAULT,CW_USEDEFAULT,320,80,hWnd,0,hProjectInstance,NULL);
-   RENDER Render(FPRS_1.FileName);//запустим рендер
-   DestroyWindow(KeyData.hWndProgress);
-   EnableWindow(KeyData.hWndMain,TRUE);
-   EnableWindow(KeyData.hWndMenu,TRUE);
-   SetActiveWindow(KeyData.hWndMain);
+   EnableWindow(sKeyData.hWndMain,FALSE);
+   EnableWindow(sKeyData.hWndMenu,FALSE);
+   cWnd_Progress.cWnd_Progress=0;
+   sKeyData.hWndcWnd_Progress=CreateWindow("cWnd_Progress","Прогресс рендеринга",WS_VISIBLE|WS_OVERLAPPED,CW_USEDEFAULT,CW_USEDEFAULT,320,80,hWnd,0,hProjectInstance,NULL);
+   CRender Render(FPRS_1.FileName);//запустим рендер
+   DestroyWindow(sKeyData.hWndcWnd_Progress);
+   EnableWindow(sKeyData.hWndMain,TRUE);
+   EnableWindow(sKeyData.hWndMenu,TRUE);
+   SetActiveWindow(sKeyData.hWndMain);
   }
  }
  //------------------------------------------------------------------------------
@@ -507,94 +507,94 @@ void FORM::Command(HWND hWnds,WPARAM wParam,LPARAM lParam)
  //------------------------------------------------------------------------------
  if (id==FORM_MENU_SETTING_VECTOR)
  {
-  if (SetUp.ShowVector==0)
+  if (sSettings.ShowVector==0)
   {
-   SetUp.ShowVector=1;
+   sSettings.ShowVector=1;
    SetMenuItem(hSettingMenu,FORM_MENU_SETTING_VECTOR,MFS_CHECKED,FALSE);
   }
   else
   {
-   SetUp.ShowVector=0;
+   sSettings.ShowVector=0;
    SetMenuItem(hSettingMenu,FORM_MENU_SETTING_VECTOR,MFS_UNCHECKED,FALSE);
   }
   InvalidateRect(hWnd,NULL,FALSE);
  }
- if (id==FORM_MENU_SETTING_SHOWSEGMENT)
+ if (id==FORM_MENU_SETTING_SHOWSSegment)
  {
-  if (SetUp.ShowSegment==0)
+  if (sSettings.ShowSegment==0)
   {
-   SetUp.ShowSegment=1;
-   SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSEGMENT,MFS_CHECKED,FALSE);
+   sSettings.ShowSegment=1;
+   SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSSegment,MFS_CHECKED,FALSE);
   }
   else
   {
-   SetUp.ShowSegment=0;
-   SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSEGMENT,MFS_UNCHECKED,FALSE);
+   sSettings.ShowSegment=0;
+   SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSSegment,MFS_UNCHECKED,FALSE);
   }
   InvalidateRect(hWnd,NULL,FALSE);
  }
  if (id==FORM_MENU_SETTING_SHOWSECTOR)
  {
-  if (SetUp.ShowSector==0)
+  if (sSettings.ShowSector==0)
   {
-   SetUp.ShowSector=1;
+   sSettings.ShowSector=1;
    SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSECTOR,MFS_CHECKED,FALSE);
   }
   else
   {
-   SetUp.ShowSector=0;
+   sSettings.ShowSector=0;
    SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSECTOR,MFS_UNCHECKED,FALSE);
   }
   InvalidateRect(hWnd,NULL,FALSE);
  }
- if (id==FORM_MENU_SETTING_SHOWLIGHTING)
+ if (id==FORM_MENU_SETTING_SHOWSLighting)
  {
-  if (SetUp.ShowLighting==0)
+  if (sSettings.ShowLighting==0)
   {
-   SetUp.ShowLighting=1;
-   SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWLIGHTING,MFS_CHECKED,FALSE);
+   sSettings.ShowLighting=1;
+   SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSLighting,MFS_CHECKED,FALSE);
   }
   else
   {
-   SetUp.ShowLighting=0;
-   SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWLIGHTING,MFS_UNCHECKED,FALSE);
+   sSettings.ShowLighting=0;
+   SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSLighting,MFS_UNCHECKED,FALSE);
   }
   InvalidateRect(hWnd,NULL,FALSE);
  }
- if (id==FORM_MENU_SETTING_RENDER) SettingRenderForm.Activate();
+ if (id==FORM_MENU_SETTING_CRender) cDialog_SettingsRender.Activate();
 }
-void FORM::KeyDown(HWND hWnds,WPARAM wParam,LPARAM lParam)
+void CWnd_Form::KeyDown(HWND hWnds,WPARAM wParam,LPARAM lParam)
 {
  int key=wParam;
  if (key==VK_DELETE)//удаление объектов
  {
-  if (KeyData.PrimaryMode==6) CreateSegmentForm.DeleteSegment();//удаление сегментов
-  if (KeyData.PrimaryMode==7)//удаление секторов
+  if (sKeyData.PrimaryMode==6) cDialog_CreateSegment.DeleteSegment();//удаление сегментов
+  if (sKeyData.PrimaryMode==7)//удаление секторов
   {
    //работа с секторами
-   if (KeyData.SelectSectorType==0) CreateSimplySectorForm.DeleteSector();//если выбран простой сектор
-   if (KeyData.SelectSectorType==1) CreateSimplyDoorForm.DeleteSector();//если выбрана простая дверь
+   if (sKeyData.SelectSectorType==0) cDialog_CreateSimplySector.DeleteSector();//если выбран простой сектор
+   if (sKeyData.SelectSectorType==1) cDialog_CreateSimplyDoor.DeleteSector();//если выбрана простая дверь
    //работа с секторами
   }
-  if (KeyData.PrimaryMode==8) CreateLightingForm.DeleteLighting();//удаление источников света
-  MenuForm.UpDate();
+  if (sKeyData.PrimaryMode==8) cDialog_CreateLighting.DeleteLighting();//удаление источников света
+  cWnd_Menu.UpDate();
   InvalidateRect(hWnd,NULL,FALSE);
  }
  if (key==VK_RETURN)//модификация объекта
  {
-  if (KeyData.PrimaryMode==9) CreateSegmentForm.ModifycationSegment(KeyData.SelectLine);//модификация сегмента или линии раздела
-  if (KeyData.PrimaryMode==10)//модификация секторов
+  if (sKeyData.PrimaryMode==9) cDialog_CreateSegment.ModifycationSegment(sKeyData.SelectLine);//модификация сегмента или линии раздела
+  if (sKeyData.PrimaryMode==10)//модификация секторов
   {
    //работа с секторами
-   if (KeyData.SelectSectorType==0) CreateSimplySectorForm.ModifycationSector(KeyData.SelectSector);//если выбран простой сектор
-   if (KeyData.SelectSectorType==1) CreateSimplyDoorForm.ModifycationSector(KeyData.SelectSector);//если выбрана простая дверь
+   if (sKeyData.SelectSectorType==0) cDialog_CreateSimplySector.ModifycationSector(sKeyData.SelectSector);//если выбран простой сектор
+   if (sKeyData.SelectSectorType==1) cDialog_CreateSimplyDoor.ModifycationSector(sKeyData.SelectSector);//если выбрана простая дверь
    //работа с секторами
   }
-  if (KeyData.PrimaryMode==11) CreateLightingForm.ModifycationLighting(KeyData.SelectLighting);//модификация источников света
+  if (sKeyData.PrimaryMode==11) cDialog_CreateLighting.ModifycationLighting(sKeyData.SelectLighting);//модификация источников света
  }
 }
 //------------------------------------------------------------------------------
-void FORM::SaveMap(char *FileName)
+void CWnd_Form::SaveMap(char *FileName)
 {
  FILE *File=fopen(FileName,"w+b");
  if (File==NULL)
@@ -609,51 +609,51 @@ void FORM::SaveMap(char *FileName)
  fprintf(File,"----------------------------------------\n");
  fprintf(File,"Сегменты                                \n");
  fprintf(File,"----------------------------------------\n");
- CreateSegmentForm.SaveSegment(File);
+ cDialog_CreateSegment.SaveSegment(File);
  fprintf(File,"----------------------------------------\n");
  fprintf(File,"Источники света                         \n");
  fprintf(File,"----------------------------------------\n");
- CreateLightingForm.SaveLighting(File);
+ cDialog_CreateLighting.SaveLighting(File);
  //работа с секторами
  fprintf(File,"----------------------------------------\n");
  fprintf(File,"Простые сектора                         \n");
  fprintf(File,"----------------------------------------\n");
- CreateSimplySectorForm.SaveSector(File);
+ cDialog_CreateSimplySector.SaveSector(File);
  fprintf(File,"----------------------------------------\n");
  fprintf(File,"Простые двери                           \n");
  fprintf(File,"----------------------------------------\n");
- CreateSimplyDoorForm.SaveSector(File);
+ cDialog_CreateSimplyDoor.SaveSector(File);
  //работа с секторами
  fprintf(File,"----------------------------------------\n");
  fprintf(File,"Стартовая позиция                       \n");
  fprintf(File,"----------------------------------------\n");
- StartPosForm.SaveStartPosition(File);
+ StartPoscWnd_Form.SaveStartPosition(File);
  fprintf(File,"----------------------------------------\n");
  fprintf(File,"Текущие настройки редактора             \n");
  fprintf(File,"----------------------------------------\n");
  fprintf(File,"EDITOR SETTING\n");
  fprintf(File,"%i ",xLeftMap);
  fprintf(File,"%i ",yTopMap);
- fprintf(File,"%i ",SetUp.ShowSegmentCreateDialog);
- fprintf(File,"%i ",SetUp.ShowVector);
- fprintf(File,"%i ",SetUp.ShowSegment);
- fprintf(File,"%i ",SetUp.ShowSector);
- fprintf(File,"%i ",SetUp.ShowLighting);
- fprintf(File,"%i ",SetUp.BlockSize);
- fprintf(File,"%f ",SetUp.Constant_Attenuation);
- fprintf(File,"%f ",SetUp.Linear_Attenuation);
- fprintf(File,"%f ",SetUp.Quadric_Attenuation);
- fprintf(File,"%i ",SetUp.R_Ambient);
- fprintf(File,"%i ",SetUp.G_Ambient);
- fprintf(File,"%i ",SetUp.B_Ambient);
- fprintf(File,"%i ",SetUp.R_Fog);
- fprintf(File,"%i ",SetUp.G_Fog);
- fprintf(File,"%i ",SetUp.B_Fog);
- fprintf(File,"%i ",SetUp.Fog_Density);
- fprintf(File,"%i ",SetUp.Fog_Enable);
+ fprintf(File,"%i ",sSettings.ShowSegmentCreateDialog);
+ fprintf(File,"%i ",sSettings.ShowVector);
+ fprintf(File,"%i ",sSettings.ShowSegment);
+ fprintf(File,"%i ",sSettings.ShowSector);
+ fprintf(File,"%i ",sSettings.ShowLighting);
+ fprintf(File,"%i ",sSettings.BlockSize);
+ fprintf(File,"%f ",sSettings.Constant_Attenuation);
+ fprintf(File,"%f ",sSettings.Linear_Attenuation);
+ fprintf(File,"%f ",sSettings.Quadric_Attenuation);
+ fprintf(File,"%i ",sSettings.R_Ambient);
+ fprintf(File,"%i ",sSettings.G_Ambient);
+ fprintf(File,"%i ",sSettings.B_Ambient);
+ fprintf(File,"%i ",sSettings.R_Fog);
+ fprintf(File,"%i ",sSettings.G_Fog);
+ fprintf(File,"%i ",sSettings.B_Fog);
+ fprintf(File,"%i ",sSettings.Fog_Density);
+ fprintf(File,"%i ",sSettings.Fog_Enable);
  fclose(File);
 }
-void FORM::LoadMap(char *FileName)
+void CWnd_Form::LoadMap(char *FileName)
 {
  FILE *File=fopen(FileName,"r+b");
  if (File==NULL)
@@ -662,118 +662,118 @@ void FORM::LoadMap(char *FileName)
   return;
  }
  Initialize();
- CreateLightingForm.Initialize();
- CreatePolygonForm.Initialize();
- StartPosForm.Initialize();
- CreateSegmentForm.Initialize();
- CreateSimplySectorForm.Initialize();
- CreateSegmentForm.LoadSegment(File);
+ cDialog_CreateLighting.Initialize();
+ cDialog_CreatePolygon.Initialize();
+ StartPoscWnd_Form.Initialize();
+ cDialog_CreateSegment.Initialize();
+ cDialog_CreateSimplySector.Initialize();
+ cDialog_CreateSegment.LoadSegment(File);
  fclose(File);
  File=fopen(FileName,"r+b");
- CreateLightingForm.LoadLighting(File);
- fclose(File);
- //работа с секторами
- File=fopen(FileName,"r+b");
- CreateSimplySectorForm.LoadSector(File);
- fclose(File);
- File=fopen(FileName,"r+b");
- CreateSimplyDoorForm.LoadSector(File);
+ cDialog_CreateLighting.LoadLighting(File);
  fclose(File);
  //работа с секторами
  File=fopen(FileName,"r+b");
- StartPosForm.LoadStartPosition(File);
+ cDialog_CreateSimplySector.LoadSector(File);
+ fclose(File);
+ File=fopen(FileName,"r+b");
+ cDialog_CreateSimplyDoor.LoadSector(File);
+ fclose(File);
+ //работа с секторами
+ File=fopen(FileName,"r+b");
+ StartPoscWnd_Form.LoadStartPosition(File);
  fclose(File);
  File=fopen(FileName,"r+b");
  if (GetReadPos(File,"EDITOR SETTING"))
  {
   xLeftMap=(int)ReadNumber(File);
   yTopMap=(int)ReadNumber(File);
-  SetUp.ShowSegmentCreateDialog=(int)ReadNumber(File);
-  if (SetUp.ShowSegmentCreateDialog==0) CheckBox_ShowDialog.SetStateOff();
+  sSettings.ShowSegmentCreateDialog=(int)ReadNumber(File);
+  if (sSettings.ShowSegmentCreateDialog==0) CheckBox_ShowDialog.SetStateOff();
   else CheckBox_ShowDialog.SetStateOn();
-  SetUp.ShowVector=(int)ReadNumber(File);
-  if (SetUp.ShowVector==1) SetMenuItem(hSettingMenu,FORM_MENU_SETTING_VECTOR,MFS_CHECKED,FALSE);
+  sSettings.ShowVector=(int)ReadNumber(File);
+  if (sSettings.ShowVector==1) SetMenuItem(hSettingMenu,FORM_MENU_SETTING_VECTOR,MFS_CHECKED,FALSE);
   else SetMenuItem(hSettingMenu,FORM_MENU_SETTING_VECTOR,MFS_UNCHECKED,FALSE);
-  SetUp.ShowSegment=(int)ReadNumber(File);
-  if (SetUp.ShowSegment==1) SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSEGMENT,MFS_CHECKED,FALSE);
-  else SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSEGMENT,MFS_UNCHECKED,FALSE);
-  SetUp.ShowSector=(int)ReadNumber(File);
-  if (SetUp.ShowSector==1) SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSECTOR,MFS_CHECKED,FALSE);
+  sSettings.ShowSegment=(int)ReadNumber(File);
+  if (sSettings.ShowSegment==1) SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSSegment,MFS_CHECKED,FALSE);
+  else SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSSegment,MFS_UNCHECKED,FALSE);
+  sSettings.ShowSector=(int)ReadNumber(File);
+  if (sSettings.ShowSector==1) SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSECTOR,MFS_CHECKED,FALSE);
   else SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSECTOR,MFS_UNCHECKED,FALSE);
-  SetUp.ShowLighting=(int)ReadNumber(File);
-  if (SetUp.ShowLighting==1) SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWLIGHTING,MFS_CHECKED,FALSE);
-  else SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWLIGHTING,MFS_UNCHECKED,FALSE);
-  SetUp.BlockSize=(int)ReadNumber(File);
-  SetUp.Constant_Attenuation=ReadNumber(File);
-  SetUp.Linear_Attenuation=ReadNumber(File);
-  SetUp.Quadric_Attenuation=ReadNumber(File);
-  SetUp.R_Ambient=(int)ReadNumber(File);
-  SetUp.G_Ambient=(int)ReadNumber(File);
-  SetUp.B_Ambient=(int)ReadNumber(File);
-  SetUp.R_Fog=(int)ReadNumber(File);
-  SetUp.G_Fog=(int)ReadNumber(File);
-  SetUp.B_Fog=(int)ReadNumber(File);
-  SetUp.Fog_Density=(int)ReadNumber(File);
-  SetUp.Fog_Enable=(int)ReadNumber(File);
+  sSettings.ShowLighting=(int)ReadNumber(File);
+  if (sSettings.ShowLighting==1) SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSLighting,MFS_CHECKED,FALSE);
+  else SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSLighting,MFS_UNCHECKED,FALSE);
+  sSettings.BlockSize=(int)ReadNumber(File);
+  sSettings.Constant_Attenuation=ReadNumber(File);
+  sSettings.Linear_Attenuation=ReadNumber(File);
+  sSettings.Quadric_Attenuation=ReadNumber(File);
+  sSettings.R_Ambient=(int)ReadNumber(File);
+  sSettings.G_Ambient=(int)ReadNumber(File);
+  sSettings.B_Ambient=(int)ReadNumber(File);
+  sSettings.R_Fog=(int)ReadNumber(File);
+  sSettings.G_Fog=(int)ReadNumber(File);
+  sSettings.B_Fog=(int)ReadNumber(File);
+  sSettings.Fog_Density=(int)ReadNumber(File);
+  sSettings.Fog_Enable=(int)ReadNumber(File);
  }
  fclose(File);
- MenuForm.UpDate();
- MenuForm.Static_Text2.SetText("-");
+ cWnd_Menu.UpDate();
+ cWnd_Menu.Static_Text2.SetText("-");
  InvalidateRect(hWnd,NULL,FALSE);
 }
 //------------------------------------------------------------------------------
-void FORM::Initialize(void)
+void CWnd_Form::Initialize(void)
 {
  xLeftMap=0;//коордитата левого угла карты
  yTopMap=0;//координата верхнего угла карты
  MapMove=0;//режим прокрутки карты
   
- KeyData.PrimaryMode=0;//первичный режим работы
- KeyData.SecondaryMode=0;//вторичный режим работы
- KeyData.MaximumNumberOfLine=0;//сколько всего на карте линий (линия-сегмент или линия раздела)
- KeyData.MaximumNumberOfSimplySector=0;//сколько всего на карте обычных секторов
- KeyData.MaximumNumberOfSimplyDoor=0;//сколько всего на карте обычных дверей
- KeyData.MaximumNumberOfDisposableDoor=0;//сколько всего на карте одноразовых дверей
- KeyData.MaximumNumberOfClosedDoor=0;//сколько всего на карте запертых дверей
- KeyData.MaximumNumberOfAutoClosedDoor=0;//сколько всего на карте закрывающихся дверей
- KeyData.MaximumNumberOfSimplyPlatform=0;//сколько всего на карте обычных платформ
- KeyData.MaximumNumberOfInactivePlatform=0;//сколько всего на карте неактивных платформ
- KeyData.MaximumNumberOfDisconnectPlatform=0;//сколько всего на карте отключающихся платформ
- KeyData.MaximumNumberOfSimplyBridge=0;//сколько всего на карте обычных мостиков
- KeyData.MaximumNumberOfSimplyTeleport=0;//сколько всего на карте обычных телепортаторов
- KeyData.MaximumNumberOfAllSector=0;//сколько всего на карте всех секторов
- KeyData.MaximumNumberOfLighting=0;//сколько всего на карте источников света
+ sKeyData.PrimaryMode=0;//первичный режим работы
+ sKeyData.SecondaryMode=0;//вторичный режим работы
+ sKeyData.MaximumNumberOfLine=0;//сколько всего на карте линий (линия-сегмент или линия раздела)
+ sKeyData.MaximumNumberOfSimplySector=0;//сколько всего на карте обычных секторов
+ sKeyData.MaximumNumberOfSimplyDoor=0;//сколько всего на карте обычных дверей
+ sKeyData.MaximumNumberOfDisposableDoor=0;//сколько всего на карте одноразовых дверей
+ sKeyData.MaximumNumberOfClosedDoor=0;//сколько всего на карте запертых дверей
+ sKeyData.MaximumNumberOfAutoClosedDoor=0;//сколько всего на карте закрывающихся дверей
+ sKeyData.MaximumNumberOfSimplyPlatform=0;//сколько всего на карте обычных платформ
+ sKeyData.MaximumNumberOfInactivePlatform=0;//сколько всего на карте неактивных платформ
+ sKeyData.MaximumNumberOfDisconnectPlatform=0;//сколько всего на карте отключающихся платформ
+ sKeyData.MaximumNumberOfSimplyBridge=0;//сколько всего на карте обычных мостиков
+ sKeyData.MaximumNumberOfSimplyTeleport=0;//сколько всего на карте обычных телепортаторов
+ sKeyData.MaximumNumberOfAllSector=0;//сколько всего на карте всех секторов
+ sKeyData.MaximumNumberOfLighting=0;//сколько всего на карте источников света
   
- KeyData.MaximumPset=0;//всего точек в рисуемом блоке
- KeyData.SelectLine=-1;//ни один сегмент не выбран
- KeyData.SelectSector=-1;//ни один сектор не выбран
- KeyData.SelectSectorType=-1;//ни одного типа
- KeyData.SelectLighting=-1;//ни один источник света не выбран
- SetUp.ShowSegmentCreateDialog=1;//диалог вызывается
+ sKeyData.MaximumPset=0;//всего точек в рисуемом блоке
+ sKeyData.SelectLine=-1;//ни один сегмент не выбран
+ sKeyData.SelectSector=-1;//ни один сектор не выбран
+ sKeyData.SelectSectorType=-1;//ни одного типа
+ sKeyData.SelectLighting=-1;//ни один источник света не выбран
+ sSettings.ShowSegmentCreateDialog=1;//диалог вызывается
  CheckBox_ShowDialog.SetStateOn();
- SetUp.ShowVector=0;//направление не показывается
- SetUp.ShowSegment=1;//сегменты показываются
- SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSEGMENT,MFS_CHECKED,FALSE);
- SetUp.ShowSector=1;//сектора показываются
+ sSettings.ShowVector=0;//направление не показывается
+ sSettings.ShowSegment=1;//сегменты показываются
+ SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSSegment,MFS_CHECKED,FALSE);
+ sSettings.ShowSector=1;//сектора показываются
  SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSECTOR,MFS_CHECKED,FALSE);
- SetUp.ShowLighting=1;//источники света показываются
- SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWLIGHTING,MFS_CHECKED,FALSE);
+ sSettings.ShowLighting=1;//источники света показываются
+ SetMenuItem(hSettingMenu,FORM_MENU_SETTING_SHOWSLighting,MFS_CHECKED,FALSE);
   
   
- SetUp.BlockSize=64;//размер блока разбиения
- SetUp.Constant_Attenuation=1;//постоянное ослабление света
- SetUp.Linear_Attenuation=0.0001;//линейное ослабление света
- SetUp.Quadric_Attenuation=0.00001;//квадратичное ослабление света
- SetUp.R_Ambient=32;//глобальное фоновое освещение
- SetUp.G_Ambient=32;
- SetUp.B_Ambient=32;
- SetUp.R_Fog=255;//настройки тумана
- SetUp.G_Fog=255;
- SetUp.B_Fog=255;
- SetUp.Fog_Density=2500000;
- SetUp.Fog_Enable=0;
+ sSettings.BlockSize=64;//размер блока разбиения
+ sSettings.Constant_Attenuation=1;//постоянное ослабление света
+ sSettings.Linear_Attenuation=0.0001;//линейное ослабление света
+ sSettings.Quadric_Attenuation=0.00001;//квадратичное ослабление света
+ sSettings.R_Ambient=32;//глобальное фоновое освещение
+ sSettings.G_Ambient=32;
+ sSettings.B_Ambient=32;
+ sSettings.R_Fog=255;//настройки тумана
+ sSettings.G_Fog=255;
+ sSettings.B_Fog=255;
+ sSettings.Fog_Density=2500000;
+ sSettings.Fog_Enable=0;
 }
-int FORM::PointPosition(float x,float y,float xw1,float yw1,float xw2,float yw2)
+int CWnd_Form::PointPosition(float x,float y,float xw1,float yw1,float xw2,float yw2)
 {
  float p=x*(yw1-yw2)-y*(xw1-xw2)+xw1*yw2-xw2*yw1;
  if (p<=-EPS) p=-1;
@@ -781,23 +781,23 @@ int FORM::PointPosition(float x,float y,float xw1,float yw1,float xw2,float yw2)
  if (p>-EPS && p<EPS) p=0;
  return((int)(p));
 }
-int FORM::SectorGamber(void)
+int CWnd_Form::SectorGamber(void)
 {
- for(int n=0;n<=KeyData.MaximumPset-1;n++)
+ for(int n=0;n<=sKeyData.MaximumPset-1;n++)
  {
   int p1=n;
   int p2=n+1;
-  if (p2>=KeyData.MaximumPset-1) p2=0;
-  float x1=(float)(KeyData.X[p1]);//выбрали сторону многоугольника
-  float y1=(float)(KeyData.Y[p1]);
-  float x2=(float)(KeyData.X[p2]);
-  float y2=(float)(KeyData.Y[p2]);
+  if (p2>=sKeyData.MaximumPset-1) p2=0;
+  float x1=(float)(sKeyData.X[p1]);//выбрали сторону многоугольника
+  float y1=(float)(sKeyData.Y[p1]);
+  float x2=(float)(sKeyData.X[p2]);
+  float y2=(float)(sKeyData.Y[p2]);
   int pos=0;
-  for(int m=0;m<KeyData.MaximumPset-1;m++)
+  for(int m=0;m<sKeyData.MaximumPset-1;m++)
   {
    if (m==n) continue;
-   float x=(float)(KeyData.X[m]);//выбрали точку многоугольника
-   float y=(float)(KeyData.Y[m]);
+   float x=(float)(sKeyData.X[m]);//выбрали точку многоугольника
+   float y=(float)(sKeyData.Y[m]);
    int res=PointPosition(x,y,x1,y1,x2,y2);
    if (res==0) continue;
    if (pos==0) pos=res;
@@ -806,37 +806,37 @@ int FORM::SectorGamber(void)
  }
  return(1);//выпуклый
 }
-void FORM::GetSelectLine(int x,int y,int frontier)
+void CWnd_Form::GetSelectLine(int x,int y,int frontier)
 {
  if (!(x>=0 && x<=499 && y>=0 && y<=499)) return;
- KeyData.SelectLine=CreateSegmentForm.GetLineInScreen((int)(x+xLeftMap*10.0),(int)(y+yTopMap*10.0),frontier);
+ sKeyData.SelectLine=cDialog_CreateSegment.GetLineInScreen((int)(x+xLeftMap*10.0),(int)(y+yTopMap*10.0),frontier);
 }
-void FORM::GetSelectSector(int x,int y)
+void CWnd_Form::GetSelectSector(int x,int y)
 {
  if (!(x>=0 && x<=499 && y>=0 && y<=499)) return;
  //работа с секторами
  //проверим среди обычных секторов
- KeyData.SelectSector=CreateSimplySectorForm.GetSectorInScreen((int)(x+xLeftMap*10.0),(int)(y+yTopMap*10.0));
- if (KeyData.SelectSector!=-1)
+ sKeyData.SelectSector=cDialog_CreateSimplySector.GetSectorInScreen((int)(x+xLeftMap*10.0),(int)(y+yTopMap*10.0));
+ if (sKeyData.SelectSector!=-1)
  {
-  KeyData.SelectSectorType=0;
+  sKeyData.SelectSectorType=0;
   return;
  }
  //проверим среди обычных дверей
- KeyData.SelectSector=CreateSimplyDoorForm.GetSectorInScreen((int)(x+xLeftMap*10.0),(int)(y+yTopMap*10.0));
- if (KeyData.SelectSector!=-1) 
+ sKeyData.SelectSector=cDialog_CreateSimplyDoor.GetSectorInScreen((int)(x+xLeftMap*10.0),(int)(y+yTopMap*10.0));
+ if (sKeyData.SelectSector!=-1) 
  {
-  KeyData.SelectSectorType=1;
+  sKeyData.SelectSectorType=1;
   return;
  }
  //работа с секторами
 }
-void FORM::GetSelectLighting(int x,int y)
+void CWnd_Form::GetSelectLighting(int x,int y)
 {
  if (!(x>=0 && x<=499 && y>=0 && y<=499)) return;
- KeyData.SelectLighting=CreateLightingForm.GetLightingInScreen((int)(x+xLeftMap*10.0),(int)(y+yTopMap*10.0));
+ sKeyData.SelectLighting=cDialog_CreateLighting.GetLightingInScreen((int)(x+xLeftMap*10.0),(int)(y+yTopMap*10.0));
 }
-void FORM::LoadTexture(char *FileName)
+void CWnd_Form::LoadTexture(char *FileName)
 {
  int n;
  unsigned char R[256];
@@ -845,18 +845,18 @@ void FORM::LoadTexture(char *FileName)
  FILE *file=fopen(FileName,"r+b");
  if (file!=NULL)
  {
-  KeyData.MaximumTexture=(unsigned short)LoadShort(file);
-  if (KeyData.MaximumTexture<=0)
+  sKeyData.MaximumTexture=(unsigned short)LoadShort(file);
+  if (sKeyData.MaximumTexture<=0)
   {
-   KeyData.MaximumTexture=0;
+   sKeyData.MaximumTexture=0;
    fclose(file);
    return;
   }
   //теперь пропустим таблицу смещений текстур (здесь она не нужна)
-  for(n=0;n<KeyData.MaximumTexture;n++) LoadInt(file);
+  for(n=0;n<sKeyData.MaximumTexture;n++) LoadInt(file);
   //и загрузим сами текстуры
-  KeyData.TextureMap=new TEXTURE_MAP[KeyData.MaximumTexture];
-  for (n=0;n<KeyData.MaximumTexture;n++)
+  sKeyData.TextureMap=new STextureMap[sKeyData.MaximumTexture];
+  for (n=0;n<sKeyData.MaximumTexture;n++)
   {
    int ColorMode=LoadChar(file);
    if (ColorMode==1)//256 цветов
@@ -867,58 +867,58 @@ void FORM::LoadTexture(char *FileName)
      G[m]=(unsigned char)LoadChar(file);
      B[m]=(unsigned char)LoadChar(file);
     }
-    KeyData.TextureMap[n].Size=(unsigned short)LoadShort(file);
-    KeyData.TextureMap[n].R=new unsigned char[KeyData.TextureMap[n].Size*KeyData.TextureMap[n].Size];
-    KeyData.TextureMap[n].G=new unsigned char[KeyData.TextureMap[n].Size*KeyData.TextureMap[n].Size];
-    KeyData.TextureMap[n].B=new unsigned char[KeyData.TextureMap[n].Size*KeyData.TextureMap[n].Size];
-    for(int x=0;x<KeyData.TextureMap[n].Size;x++)
-    for(int y=0;y<KeyData.TextureMap[n].Size;y++)
+    sKeyData.TextureMap[n].Size=(unsigned short)LoadShort(file);
+    sKeyData.TextureMap[n].R=new unsigned char[sKeyData.TextureMap[n].Size*sKeyData.TextureMap[n].Size];
+    sKeyData.TextureMap[n].G=new unsigned char[sKeyData.TextureMap[n].Size*sKeyData.TextureMap[n].Size];
+    sKeyData.TextureMap[n].B=new unsigned char[sKeyData.TextureMap[n].Size*sKeyData.TextureMap[n].Size];
+    for(int x=0;x<sKeyData.TextureMap[n].Size;x++)
+    for(int y=0;y<sKeyData.TextureMap[n].Size;y++)
     {
      int byte=(unsigned char)LoadChar(file);
-     int offset=x*KeyData.TextureMap[n].Size+y;
-     KeyData.TextureMap[n].R[offset]=R[byte];
-     KeyData.TextureMap[n].G[offset]=G[byte];
-     KeyData.TextureMap[n].B[offset]=B[byte];
+     int offset=x*sKeyData.TextureMap[n].Size+y;
+     sKeyData.TextureMap[n].R[offset]=R[byte];
+     sKeyData.TextureMap[n].G[offset]=G[byte];
+     sKeyData.TextureMap[n].B[offset]=B[byte];
     }
    }
    if (ColorMode==2)//RGB цвета
    {
-    KeyData.TextureMap[n].Size=(unsigned short)LoadShort(file);
-    KeyData.TextureMap[n].R=new unsigned char[KeyData.TextureMap[n].Size*KeyData.TextureMap[n].Size];
-    KeyData.TextureMap[n].G=new unsigned char[KeyData.TextureMap[n].Size*KeyData.TextureMap[n].Size];
-    KeyData.TextureMap[n].B=new unsigned char[KeyData.TextureMap[n].Size*KeyData.TextureMap[n].Size];
-    for(int x=0;x<KeyData.TextureMap[n].Size;x++)
-    for(int y=0;y<KeyData.TextureMap[n].Size;y++)
+    sKeyData.TextureMap[n].Size=(unsigned short)LoadShort(file);
+    sKeyData.TextureMap[n].R=new unsigned char[sKeyData.TextureMap[n].Size*sKeyData.TextureMap[n].Size];
+    sKeyData.TextureMap[n].G=new unsigned char[sKeyData.TextureMap[n].Size*sKeyData.TextureMap[n].Size];
+    sKeyData.TextureMap[n].B=new unsigned char[sKeyData.TextureMap[n].Size*sKeyData.TextureMap[n].Size];
+    for(int x=0;x<sKeyData.TextureMap[n].Size;x++)
+    for(int y=0;y<sKeyData.TextureMap[n].Size;y++)
     {
      unsigned char r=(unsigned char)LoadChar(file);
      unsigned char g=(unsigned char)LoadChar(file);
      unsigned char b=(unsigned char)LoadChar(file);
-     int offset=x*KeyData.TextureMap[n].Size+y;
-     KeyData.TextureMap[n].R[offset]=r;
-     KeyData.TextureMap[n].G[offset]=g;
-     KeyData.TextureMap[n].B[offset]=b;
+     int offset=x*sKeyData.TextureMap[n].Size+y;
+     sKeyData.TextureMap[n].R[offset]=r;
+     sKeyData.TextureMap[n].G[offset]=g;
+     sKeyData.TextureMap[n].B[offset]=b;
     }
    }
    /*
    //для сохранения текстур в tga-файлах
-   unsigned char *image=new unsigned char[KeyData.TextureMap[n].Size*KeyData.TextureMap[n].Size*4];
-   for(int x=0;x<KeyData.TextureMap[n].Size;x++)
+   unsigned char *image=new unsigned char[sKeyData.TextureMap[n].Size*sKeyData.TextureMap[n].Size*4];
+   for(int x=0;x<sKeyData.TextureMap[n].Size;x++)
    {
-    for(int y=0;y<KeyData.TextureMap[n].Size;y++)
+    for(int y=0;y<sKeyData.TextureMap[n].Size;y++)
 	{
-     int offset=x*KeyData.TextureMap[n].Size+y;
-     image[(x+y*KeyData.TextureMap[n].Size)*3]=KeyData.TextureMap[n].B[offset];
-     image[(x+y*KeyData.TextureMap[n].Size)*3+1]=KeyData.TextureMap[n].G[offset];
-     image[(x+y*KeyData.TextureMap[n].Size)*3+2]=KeyData.TextureMap[n].R[offset];
+     int offset=x*sKeyData.TextureMap[n].Size+y;
+     image[(x+y*sKeyData.TextureMap[n].Size)*3]=sKeyData.TextureMap[n].B[offset];
+     image[(x+y*sKeyData.TextureMap[n].Size)*3+1]=sKeyData.TextureMap[n].G[offset];
+     image[(x+y*sKeyData.TextureMap[n].Size)*3+2]=sKeyData.TextureMap[n].R[offset];
 	}
    }
    char filename[255];
    sprintf(filename,"texture\\%i.tga",n+1);
-   SaveTGA(filename,KeyData.TextureMap[n].Size,KeyData.TextureMap[n].Size,image);
+   SaveTGA(filename,sKeyData.TextureMap[n].Size,sKeyData.TextureMap[n].Size,image);
    delete[](image);*/
   }
   fclose(file);
  }
- else KeyData.MaximumTexture=0;
+ else sKeyData.MaximumTexture=0;
 }
  

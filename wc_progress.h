@@ -1,20 +1,20 @@
-#ifndef WC_PROGRESS_H
-#define WC_PROGRESS_H
+#ifndef WC_CWnd_Progress_H
+#define WC_CWnd_Progress_H
 
 #include <windows.h>
 #include "common.h"
 
 //------------------------------------------------------------------------------
-void PROGRESS_Register(void);
-LONG WINAPI PROGRESS_wndProc(HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam);
+void CWnd_Progress_Register(void);
+LONG WINAPI CWnd_Progress_wndProc(HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam);
 //------------------------------------------------------------------------------
-class PROGRESS
+class CWnd_Progress
 {
  public:
   //-----------------------------------------------------------
   HWND hWnd;
   //-----------------------------------------------------------
-  float Progress;
+  float cWnd_Progress;
   //-----------------------------------------------------------
   //-----------------------------------------------------------
   void Create(HWND hWnds,WPARAM wParam,LPARAM lParam);

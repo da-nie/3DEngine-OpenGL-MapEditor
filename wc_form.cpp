@@ -899,6 +899,23 @@ void FORM::LoadTexture(char *FileName)
      KeyData.TextureMap[n].B[offset]=b;
     }
    }
+   /*
+   //для сохранения текстур в tga-файлах
+   unsigned char *image=new unsigned char[KeyData.TextureMap[n].Size*KeyData.TextureMap[n].Size*4];
+   for(int x=0;x<KeyData.TextureMap[n].Size;x++)
+   {
+    for(int y=0;y<KeyData.TextureMap[n].Size;y++)
+	{
+     int offset=x*KeyData.TextureMap[n].Size+y;
+     image[(x+y*KeyData.TextureMap[n].Size)*3]=KeyData.TextureMap[n].B[offset];
+     image[(x+y*KeyData.TextureMap[n].Size)*3+1]=KeyData.TextureMap[n].G[offset];
+     image[(x+y*KeyData.TextureMap[n].Size)*3+2]=KeyData.TextureMap[n].R[offset];
+	}
+   }
+   char filename[255];
+   sprintf(filename,"texture\\%i.tga",n+1);
+   SaveTGA(filename,KeyData.TextureMap[n].Size,KeyData.TextureMap[n].Size,image);
+   delete[](image);*/
   }
   fclose(file);
  }

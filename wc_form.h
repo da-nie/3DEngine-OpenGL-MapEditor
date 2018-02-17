@@ -23,6 +23,7 @@
 #include "dl_settingrenderform.h"
 #include "wc_progress.h"
 #include "gdi.h"
+#include "tga.h"
 #include "render.h"
 
 

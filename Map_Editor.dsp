@@ -195,6 +195,10 @@ SOURCE=.\surface.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\tga.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\vector.cpp
 # End Source File
 # Begin Source File
@@ -312,6 +316,10 @@ SOURCE=.\static.h
 # Begin Source File
 
 SOURCE=.\surface.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\tga.h
 # End Source File
 # Begin Source File
 
